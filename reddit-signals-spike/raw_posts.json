@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "title": "Email marketing tools are killing my budget - $300/month for 10k subscribers",
+    "content": "I run a small SaaS and every email tool I've tried (Mailchimp, ConvertKit, SendGrid) charges insane prices once you hit 10k subscribers. I'm spending more on email than on hosting. The worst part is I only send 2-3 emails per month, so I'm paying for features I don't use. Has anyone found a cheaper alternative that doesn't suck?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock1",
+    "pubDate": "2026-02-09T10:30:00Z",
+    "author": "frustrated_founder"
+  },
+  {
+    "id": 2,
+    "title": "Just hit $10k MRR! AMA",
+    "content": "After 18 months of grinding, my side project finally hit $10k in monthly recurring revenue. Happy to answer questions about the journey. Built it with no-code tools, zero marketing budget, just organic content.",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock2",
+    "pubDate": "2026-02-09T09:15:00Z",
+    "author": "successful_builder"
+  },
+  {
+    "id": 3,
+    "title": "Freelance client ghosted me after I delivered the work",
+    "content": "Spent 40 hours building a custom dashboard for a client. Sent the final files last week and now they're not responding to emails. No payment, no feedback, nothing. I didn't get a deposit upfront because they seemed legit. This is the third time this has happened this year. How do you guys handle contracts and deposits?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock3",
+    "pubDate": "2026-02-09T08:45:00Z",
+    "author": "burned_freelancer"
+  },
+  {
+    "id": 4,
+    "title": "What's your go-to tech stack in 2026?",
+    "content": "Curious what everyone is using these days. I'm still on React/Node but wondering if I should learn the new stuff.",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock4",
+    "pubDate": "2026-02-08T22:00:00Z",
+    "author": "tech_curious"
+  },
+  {
+    "id": 5,
+    "title": "Customer support is eating all my time - 4 hours a day answering the same questions",
+    "content": "My SaaS has 200 paying customers and I'm spending 3-4 hours every day answering support emails. It's mostly the same 10 questions over and over (How do I reset password? Where's the export button? etc). I've added an FAQ page but nobody reads it. Thinking about hiring someone but can't afford it yet. How did you scale support without burning out?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock5",
+    "pubDate": "2026-02-08T20:30:00Z",
+    "author": "support_drowning"
+  },
+  {
+    "id": 6,
+    "title": "Elon Musk is a genius entrepreneur",
+    "content": "Just my opinion but what he's done with Tesla and SpaceX is incredible",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock6",
+    "pubDate": "2026-02-08T19:00:00Z",
+    "author": "musk_fan"
+  },
+  {
+    "id": 7,
+    "title": "Spent 6 months building my app and got 0 signups on launch day",
+    "content": "I quit my job to build this productivity app. Worked nights and weekends for 6 months. Posted on ProductHunt, HackerNews, Twitter - got 500 visitors but zero signups. Not even one. Starting to think I should have validated the idea first before building. The worst part is I spent so much time on features nobody asked for.",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock7",
+    "pubDate": "2026-02-08T17:45:00Z",
+    "author": "defeated_builder"
+  },
+  {
+    "id": 8,
+    "title": "What are the best books for entrepreneurs?",
+    "content": "Looking for book recommendations to read this month",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock8",
+    "pubDate": "2026-02-08T16:20:00Z",
+    "author": "book_seeker"
+  },
+  {
+    "id": 9,
+    "title": "Competitor just copied my entire landing page word-for-word",
+    "content": "Woke up today to find a competitor literally copied my landing page. Same headlines, same features list, same pricing structure. They just swapped the logo. I've spent months A/B testing that copy. Do I have any legal options here? Should I even care or just focus on building a better product?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock9",
+    "pubDate": "2026-02-08T15:00:00Z",
+    "author": "copied_founder"
+  },
+  {
+    "id": 10,
+    "title": "When is the best time to post on LinkedIn?",
+    "content": "Trying to grow my personal brand, what time gets the most engagement?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock10",
+    "pubDate": "2026-02-08T14:30:00Z",
+    "author": "linkedin_poster"
+  },
+  {
+    "id": 11,
+    "title": "Burned out after 2 years of solo building - need advice",
+    "content": "Running a solo SaaS business is crushing me. I'm the developer, marketer, support person, everything. Wake up at 6am to fix bugs, work until midnight on new features. Haven't taken a day off in 8 months. Revenue is growing but I feel like I'm going to break. How do I get out of this cycle without hiring (can't afford it yet)?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock11",
+    "pubDate": "2026-02-08T13:15:00Z",
+    "author": "solo_burnout"
+  },
+  {
+    "id": 12,
+    "title": "Why do people hate on dropshipping?",
+    "content": "Seems like a legit business model to me",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock12",
+    "pubDate": "2026-02-08T12:00:00Z",
+    "author": "dropship_defender"
+  },
+  {
+    "id": 13,
+    "title": "Stripe fees are eating 30% of my revenue on low-ticket products",
+    "content": "I sell a $5/month product and Stripe takes $0.30 + 2.9% per transaction. That's basically 8.9% on a $5 charge. Plus chargebacks and currency conversion fees. By the time I factor in hosting and email, I'm making $2 per customer. Is there a payment processor that doesn't destroy margins on small transactions?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock13",
+    "pubDate": "2026-02-08T10:45:00Z",
+    "author": "margin_squeezed"
+  },
+  {
+    "id": 14,
+    "title": "My co-founder wants equity but won't quit his day job",
+    "content": "Started a startup with a friend 3 months ago. We agreed on 50/50 equity but now he says he needs to keep his full-time job for at least another year while I'm working on this 80 hours/week. He contributes maybe 5 hours on weekends. This doesn't feel fair anymore. How do I bring this up without destroying the friendship?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock14",
+    "pubDate": "2026-02-08T09:30:00Z",
+    "author": "equity_confused"
+  },
+  {
+    "id": 15,
+    "title": "FREE COURSE: How to make $10k/month with AI agents (link in comments)",
+    "content": "I've been using AI to automate my business and now I'm teaching others. Check out my free course...",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock15",
+    "pubDate": "2026-02-08T08:00:00Z",
+    "author": "course_seller"
+  },
+  {
+    "id": 16,
+    "title": "Bookkeeping is a nightmare - I've avoided it for 6 months and now I'm screwed",
+    "content": "I'm a technical founder and I absolutely hate dealing with finances. Haven't reconciled my books in 6 months. Tax deadline is coming up and I have no idea what my actual revenue is because everything is scattered across Stripe, PayPal, bank statements. Tried QuickBooks but it's so confusing. Do I just hire someone or is there an easier way?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock16",
+    "pubDate": "2026-02-07T22:30:00Z",
+    "author": "finance_avoider"
+  },
+  {
+    "id": 17,
+    "title": "Just launched on ProductHunt! Upvote pls",
+    "content": "We're live on PH today, would love your support!",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock17",
+    "pubDate": "2026-02-07T21:00:00Z",
+    "author": "ph_launcher"
+  },
+  {
+    "id": 18,
+    "title": "How do you decide which startup idea to build when you have 10 ideas?",
+    "content": "I'm a developer and I have a list of 10 product ideas I want to build. Every Monday I pick a different one to start working on, then by Wednesday I'm doubting it and switching to another idea. I've built 3 MVPs in the last 2 months but never stick with one long enough to get users. How do you commit to ONE idea and see it through?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock18",
+    "pubDate": "2026-02-07T19:45:00Z",
+    "author": "idea_hopper"
+  },
+  {
+    "id": 19,
+    "title": "😂 When your entire business depends on a $5/month API that just shut down",
+    "content": "[Meme image: Sweating guy choosing between two buttons]",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock19",
+    "pubDate": "2026-02-07T18:20:00Z",
+    "author": "meme_lord"
+  },
+  {
+    "id": 20,
+    "title": "Charging for API usage is harder than I thought - users complain no matter what I price it at",
+    "content": "My API has costs (OpenAI, hosting, DB queries) so I need to charge per request. I tried $0.01/request and people said it's too expensive. I tried $0.001/request and barely cover costs. I tried monthly subscriptions with usage limits but users hate hitting caps. I tried free tier with paid add-ons but 95% stay on free forever. How do you price API products without pissing everyone off or going broke?",
+    "url": "https://reddit.com/r/Entrepreneur/comments/mock20",
+    "pubDate": "2026-02-07T17:00:00Z",
+    "author": "pricing_nightmare"
+  }
+]

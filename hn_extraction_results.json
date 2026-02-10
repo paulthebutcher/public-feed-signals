@@ -1,0 +1,189 @@
+[
+  {
+    "post_id": 46937696,
+    "has_pain_point": false,
+    "reason": "Survey/discussion thread asking 'What are you working on?' - no specific pain expressed"
+  },
+  {
+    "post_id": 46960352,
+    "has_pain_point": false,
+    "reason": "Opinion article about AI evaluation structures - informational, no actionable pain point"
+  },
+  {
+    "post_id": 46958774,
+    "has_pain_point": true,
+    "pain_point": "AI coding assistants (Codex) not maintaining code style consistency and wasting tokens on repeated corrections",
+    "intensity": 75,
+    "specificity": 90,
+    "frequency": 90,
+    "composite_score": 85.0,
+    "supporting_quote": "I can't prevent Codex from introducing linter errors. It's like having a junior developer who has never used the tab key before. I wind up giving them the same feedback over and over.",
+    "extraction_notes": "Very specific (tabs vs spaces, linter errors, token waste). Daily frequency. Clear frustration."
+  },
+  {
+    "post_id": 46958617,
+    "has_pain_point": true,
+    "pain_point": "Suspicion that older LLM models degrade over time due to quantization or throttling optimizations",
+    "intensity": 50,
+    "specificity": 60,
+    "frequency": 70,
+    "composite_score": 60.0,
+    "supporting_quote": "I've seen discussion on X suggesting that older models (e.g., Claude 4.5) appear to degrade over time — possibly due to increased quantization, throttling, or other inference-cost optimizations",
+    "extraction_notes": "Borderline - more curiosity than acute pain, but suggests ongoing concern"
+  },
+  {
+    "post_id": 46958375,
+    "has_pain_point": false,
+    "reason": "Survey thread asking 'What do you want people to build?' - wishlist, not a specific pain"
+  },
+  {
+    "post_id": 46946464,
+    "has_pain_point": true,
+    "pain_point": "Solo founders uncertain where to invest time: provisional patents vs shipping and user traction",
+    "intensity": 60,
+    "specificity": 75,
+    "frequency": 70,
+    "composite_score": 68.3,
+    "supporting_quote": "I am trying to calibrate how much time/energy to put into IP vs just shipping + user traction at this stage.",
+    "extraction_notes": "Decision paralysis for solo founders - common recurring problem"
+  },
+  {
+    "post_id": 46907001,
+    "has_pain_point": false,
+    "reason": "Curiosity question about Mac Studio for local LLMs - no frustration or problem expressed"
+  },
+  {
+    "post_id": 46949048,
+    "has_pain_point": true,
+    "pain_point": "Medical imaging software is laggy, bloated (Electron apps), or expensive cloud subscriptions",
+    "intensity": 80,
+    "specificity": 85,
+    "frequency": 85,
+    "composite_score": 83.3,
+    "supporting_quote": "I was frustrated with the lag in standard medical imaging software. Most existing solutions were either bloated Electron apps or expensive cloud subscriptions.",
+    "extraction_notes": "Domain expert (surgeon) building solution to own pain - very credible signal"
+  },
+  {
+    "post_id": 46952458,
+    "has_pain_point": false,
+    "reason": "Informational post about Nova web framework - no pain expressed, just sharing work"
+  },
+  {
+    "post_id": 46948113,
+    "has_pain_point": false,
+    "reason": "Show HN: Flight simulator project - no pain point, just showcasing work"
+  },
+  {
+    "post_id": 46937690,
+    "has_pain_point": false,
+    "reason": "Technical curiosity question about VLIW vs DSPs - no pain or frustration"
+  },
+  {
+    "post_id": 46909060,
+    "has_pain_point": true,
+    "pain_point": "Meta AI API waitlist has been locked for 10 months with no access",
+    "intensity": 65,
+    "specificity": 80,
+    "frequency": 85,
+    "composite_score": 76.7,
+    "supporting_quote": "Their API is still waitlist-only 10 months on.",
+    "extraction_notes": "Borderline but includes frustration + time duration (10 months) = recurring pain"
+  },
+  {
+    "post_id": 46917633,
+    "has_pain_point": false,
+    "reason": "Positive/philosophical question about making world better - no pain expressed"
+  },
+  {
+    "post_id": 46941269,
+    "has_pain_point": false,
+    "reason": "Informational question about Genspark - curiosity, no pain"
+  },
+  {
+    "post_id": 46941146,
+    "has_pain_point": true,
+    "pain_point": "Uncertain which customer-facing analytics tool to use (build vs buy, e.g. Metabase)",
+    "intensity": 50,
+    "specificity": 65,
+    "frequency": 60,
+    "composite_score": 58.3,
+    "supporting_quote": "I am curious what you guys use for customer facing analytics. Do you make your own or do you use something like Metabase?",
+    "extraction_notes": "Mild pain - decision fatigue, not acute frustration. Borderline."
+  },
+  {
+    "post_id": 46919016,
+    "has_pain_point": true,
+    "pain_point": "HackerNews overwhelmed with AI content (80%), making it hard to find non-AI tech discussions",
+    "intensity": 60,
+    "specificity": 70,
+    "frequency": 90,
+    "composite_score": 73.3,
+    "supporting_quote": "80% of HN nowadays is focussed on the AI industry, I'm on the search for a good tech forum that focuses on the rest.",
+    "extraction_notes": "Daily recurring pain (reading HN). Specific percentage (80%). Seeking alternatives."
+  },
+  {
+    "post_id": 46896309,
+    "has_pain_point": false,
+    "reason": "Survey question about team AI adoption - no personal pain, just gathering data"
+  },
+  {
+    "post_id": 46935171,
+    "has_pain_point": true,
+    "pain_point": "Mid-level engineers (4-8 YOE) being displaced by AI-native entry-level and staff-level polarization",
+    "intensity": 75,
+    "specificity": 80,
+    "frequency": 85,
+    "composite_score": 80.0,
+    "supporting_quote": "We are seeing a 'Mid-Level Squeeze' where companies prioritize either 'AI-Native' entry-level talent (low cost, high adaptability) or Staff-level architects. The traditional 4-8 YOE generalist feature developer appears to be the primary demographic of the current layoff cycle.",
+    "extraction_notes": "Structural unemployment concern. Specific YOE range. Recurring (25k YTD layoffs)."
+  },
+  {
+    "post_id": 46916245,
+    "has_pain_point": false,
+    "reason": "Show HN: AI regex solver project - no pain point, showcasing work"
+  },
+  {
+    "post_id": 46905476,
+    "has_pain_point": true,
+    "pain_point": "Most businesses are bloated with too many employees, excessive structure/rules, and hostile to new ideas",
+    "intensity": 85,
+    "specificity": 75,
+    "frequency": 80,
+    "composite_score": 80.0,
+    "supporting_quote": "The Swamp is waist high in Scrum certifications and gigs where the key skill is 'navigating red tape'. The architects roam, with no expectations from management, and with a mandate to stop every system that does not yet include an Azure Event Hub.",
+    "extraction_notes": "Very frustrated ('The Swamp'), seeking job, recurring experience across multiple companies"
+  },
+  {
+    "post_id": 46926262,
+    "has_pain_point": true,
+    "pain_point": "Opus 4.6 ignoring explicit instructions and deviating from specifications without disclosure",
+    "intensity": 90,
+    "specificity": 85,
+    "frequency": 85,
+    "composite_score": 86.7,
+    "supporting_quote": "I'm very dismayed by Opus 4.6's ability to follow instructions. I have given it very clear instructions on several points, only to discover it ignored me without telling me. This is not acceptable.",
+    "extraction_notes": "'Very dismayed', 'not acceptable' = high intensity. Specific model (4.6). Repeated throughout session."
+  },
+  {
+    "post_id": 46935628,
+    "has_pain_point": true,
+    "pain_point": "Codex 5.3 breaks when outputting specific string pattern, causing workflow disruption",
+    "intensity": 60,
+    "specificity": 95,
+    "frequency": 70,
+    "composite_score": 75.0,
+    "supporting_quote": "Codex 5.3 cannot output ' +#+#+#+#+#+ ' without completely breaking and switching to arabic.",
+    "extraction_notes": "Extremely specific bug. Workaround exists but adds complexity. Recurring issue in agent harnesses."
+  },
+  {
+    "post_id": 46922527,
+    "has_pain_point": true,
+    "pain_point": "LLMs are probabilistic but enterprises need deterministic, auditable, and accountable systems",
+    "intensity": 70,
+    "specificity": 85,
+    "frequency": 90,
+    "composite_score": 81.7,
+    "supporting_quote": "LLMs are probabilistic and non-deterministic, while enterprises are built on predictability, auditability, and accountability. That works for demos, but starts breaking down when you need explainability, policy enforcement, or post-incident accountability.",
+    "extraction_notes": "Fundamental architectural mismatch. Recurring ('over the last year'). Breaks in production."
+  }
+]

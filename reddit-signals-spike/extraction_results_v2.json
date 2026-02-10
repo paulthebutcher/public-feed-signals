@@ -1,0 +1,168 @@
+[
+  {
+    "post_id": 1,
+    "has_pain_point": true,
+    "pain_point": "Email marketing tools charge high prices for infrequent senders with large subscriber lists",
+    "intensity": 75,
+    "specificity": 90,
+    "frequency": 85,
+    "composite_score": 83.3,
+    "supporting_quote": "$300/month for 10k subscribers. I'm spending more on email than on hosting. I only send 2-3 emails per month",
+    "iteration_notes": "Concrete numbers (10k subs, $300, 2-3 emails) = high specificity. 'Killing my budget' = 75 intensity. Monthly recurring = 85 frequency."
+  },
+  {
+    "post_id": 2,
+    "has_pain_point": false,
+    "reason": "Success story without a specific problem expressed"
+  },
+  {
+    "post_id": 3,
+    "has_pain_point": true,
+    "pain_point": "Freelancers getting ghosted by clients after delivering work without payment",
+    "intensity": 85,
+    "specificity": 95,
+    "frequency": 90,
+    "composite_score": 90.0,
+    "supporting_quote": "Spent 40 hours building a custom dashboard for a client. This is the third time this has happened this year.",
+    "iteration_notes": "Concrete details (40 hours, no payment). 'Third time this year' = 90 frequency. High financial impact = 85 intensity."
+  },
+  {
+    "post_id": 4,
+    "has_pain_point": false,
+    "reason": "General tech stack question, no complaint or specific problem stated"
+  },
+  {
+    "post_id": 5,
+    "has_pain_point": true,
+    "pain_point": "Solo founders spending excessive time answering repetitive customer support questions",
+    "intensity": 80,
+    "specificity": 95,
+    "frequency": 95,
+    "composite_score": 90.0,
+    "supporting_quote": "I'm spending 3-4 hours every day answering support emails. It's mostly the same 10 questions over and over.",
+    "iteration_notes": "'Every day' + '3-4 hours' = 95 frequency, 95 specificity. 'Eating all my time' = 80 intensity."
+  },
+  {
+    "post_id": 6,
+    "has_pain_point": false,
+    "reason": "Opinion post about entrepreneur, no actionable pain point"
+  },
+  {
+    "post_id": 7,
+    "has_pain_point": true,
+    "pain_point": "Building products for months without validation, resulting in zero user adoption on launch",
+    "intensity": 90,
+    "specificity": 90,
+    "frequency": 70,
+    "composite_score": 83.3,
+    "supporting_quote": "Worked nights and weekends for 6 months. Posted on ProductHunt, HackerNews, Twitter - got 500 visitors but zero signups.",
+    "iteration_notes": "Concrete: 6 months, 500 visitors, 0 signups. 'Starting to think I should have validated' = learning moment. Might be one-time = 70 frequency."
+  },
+  {
+    "post_id": 8,
+    "has_pain_point": false,
+    "reason": "Book recommendation request, no problem being expressed"
+  },
+  {
+    "post_id": 9,
+    "has_pain_point": true,
+    "pain_point": "Competitors copying landing page copy and positioning after months of optimization work",
+    "intensity": 70,
+    "specificity": 70,
+    "frequency": 55,
+    "composite_score": 65.0,
+    "supporting_quote": "Competitor literally copied my landing page. Same headlines, same features list, same pricing structure.",
+    "iteration_notes": "Lower scores with v2 criteria: More about legal/emotional frustration than workflow pain. 'Do I have any legal options?' = advice-seeking, less actionable. Reduced specificity to 70, frequency to 55."
+  },
+  {
+    "post_id": 10,
+    "has_pain_point": false,
+    "reason": "General LinkedIn timing question, no specific pain or problem"
+  },
+  {
+    "post_id": 11,
+    "has_pain_point": true,
+    "pain_point": "Solo SaaS founders experiencing extreme burnout from handling all business functions alone",
+    "intensity": 95,
+    "specificity": 90,
+    "frequency": 95,
+    "composite_score": 93.3,
+    "supporting_quote": "Wake up at 6am to fix bugs, work until midnight on new features. Haven't taken a day off in 8 months. I feel like I'm going to break.",
+    "iteration_notes": "'Going to break' = 95 intensity. Daily routine (6am-midnight, 8 months) = 95 frequency. Concrete workflow = 90 specificity."
+  },
+  {
+    "post_id": 12,
+    "has_pain_point": false,
+    "reason": "Opinion question about dropshipping perception, no actionable problem"
+  },
+  {
+    "post_id": 13,
+    "has_pain_point": true,
+    "pain_point": "Payment processor fees destroying profit margins on low-ticket subscription products",
+    "intensity": 80,
+    "specificity": 95,
+    "frequency": 85,
+    "composite_score": 86.7,
+    "supporting_quote": "Stripe takes $0.30 + 2.9% per transaction. That's basically 8.9% on a $5 charge. By the time I factor in hosting and email, I'm making $2 per customer.",
+    "iteration_notes": "Extremely specific: exact fees ($0.30 + 2.9%), price point ($5), net margin ($2). Monthly recurring = 85 frequency."
+  },
+  {
+    "post_id": 14,
+    "has_pain_point": true,
+    "pain_point": "Co-founder equity mismatch when one partner works full-time while other keeps day job",
+    "intensity": 75,
+    "specificity": 85,
+    "frequency": 70,
+    "composite_score": 76.7,
+    "supporting_quote": "We agreed on 50/50 equity but now he says he needs to keep his full-time job for at least another year while I'm working on this 80 hours/week. He contributes maybe 5 hours on weekends.",
+    "iteration_notes": "Concrete: 50/50 split, 80hrs vs 5hrs. Ongoing but might resolve = 70 frequency."
+  },
+  {
+    "post_id": 15,
+    "has_pain_point": false,
+    "reason": "Self-promotional spam for a course, no genuine problem"
+  },
+  {
+    "post_id": 16,
+    "has_pain_point": true,
+    "pain_point": "Technical founders struggling with bookkeeping and scattered financial data for tax compliance",
+    "intensity": 80,
+    "specificity": 90,
+    "frequency": 85,
+    "composite_score": 85.0,
+    "supporting_quote": "Haven't reconciled my books in 6 months. Tax deadline is coming up and I have no idea what my actual revenue is because everything is scattered across Stripe, PayPal, bank statements.",
+    "iteration_notes": "'Nightmare' = 80 intensity. '6 months', multiple systems = high specificity. Recurring monthly pain = 85 frequency."
+  },
+  {
+    "post_id": 17,
+    "has_pain_point": false,
+    "reason": "ProductHunt launch promotion, self-promotional post"
+  },
+  {
+    "post_id": 18,
+    "has_pain_point": true,
+    "pain_point": "Developer paralysis from constantly switching between multiple startup ideas without committing",
+    "intensity": 70,
+    "specificity": 80,
+    "frequency": 90,
+    "composite_score": 80.0,
+    "supporting_quote": "Every Monday I pick a different one to start working on, then by Wednesday I'm doubting it and switching to another idea. I've built 3 MVPs in the last 2 months but never stick with one long enough to get users.",
+    "iteration_notes": "'Every Monday...by Wednesday' = 90 frequency (weekly pattern). Concrete: 10 ideas, 3 MVPs in 2 months = 80 specificity."
+  },
+  {
+    "post_id": 19,
+    "has_pain_point": false,
+    "reason": "Meme post with emoji and image description, not a genuine problem discussion"
+  },
+  {
+    "post_id": 20,
+    "has_pain_point": true,
+    "pain_point": "Pricing API products with variable costs while keeping users satisfied and maintaining profitability",
+    "intensity": 75,
+    "specificity": 90,
+    "frequency": 85,
+    "composite_score": 83.3,
+    "supporting_quote": "I tried $0.01/request and people said it's too expensive. I tried $0.001/request and barely cover costs. I tried monthly subscriptions with usage limits but users hate hitting caps.",
+    "iteration_notes": "Multiple concrete attempts with prices. Recurring business model = 85 frequency. Specific workflow pain = 90 specificity."
+  }
+]

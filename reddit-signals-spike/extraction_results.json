@@ -1,0 +1,157 @@
+[
+  {
+    "post_id": 1,
+    "has_pain_point": true,
+    "pain_point": "Email marketing tools are prohibitively expensive for low-volume senders with large subscriber lists",
+    "intensity": 75,
+    "specificity": 85,
+    "frequency": 80,
+    "composite_score": 80.0,
+    "supporting_quote": "I'm spending more on email than on hosting. The worst part is I only send 2-3 emails per month, so I'm paying for features I don't use."
+  },
+  {
+    "post_id": 2,
+    "has_pain_point": false,
+    "reason": "Success story without a specific problem expressed"
+  },
+  {
+    "post_id": 3,
+    "has_pain_point": true,
+    "pain_point": "Freelancers getting ghosted by clients after delivering work without payment",
+    "intensity": 85,
+    "specificity": 90,
+    "frequency": 90,
+    "composite_score": 88.3,
+    "supporting_quote": "This is the third time this has happened this year. I didn't get a deposit upfront because they seemed legit."
+  },
+  {
+    "post_id": 4,
+    "has_pain_point": false,
+    "reason": "General tech stack question, no specific complaint or problem"
+  },
+  {
+    "post_id": 5,
+    "has_pain_point": true,
+    "pain_point": "Solo founders spending excessive time answering repetitive customer support questions",
+    "intensity": 80,
+    "specificity": 95,
+    "frequency": 95,
+    "composite_score": 90.0,
+    "supporting_quote": "I'm spending 3-4 hours every day answering support emails. It's mostly the same 10 questions over and over. I've added an FAQ page but nobody reads it."
+  },
+  {
+    "post_id": 6,
+    "has_pain_point": false,
+    "reason": "Opinion post about Elon Musk, no actionable pain point"
+  },
+  {
+    "post_id": 7,
+    "has_pain_point": true,
+    "pain_point": "Building products for 6 months without validating demand first, resulting in zero user adoption",
+    "intensity": 90,
+    "specificity": 85,
+    "frequency": 75,
+    "composite_score": 83.3,
+    "supporting_quote": "Posted on ProductHunt, HackerNews, Twitter - got 500 visitors but zero signups. Starting to think I should have validated the idea first before building."
+  },
+  {
+    "post_id": 8,
+    "has_pain_point": false,
+    "reason": "Book recommendation request, no problem being expressed"
+  },
+  {
+    "post_id": 9,
+    "has_pain_point": true,
+    "pain_point": "Competitors copying landing page copy and positioning after months of A/B testing",
+    "intensity": 70,
+    "specificity": 75,
+    "frequency": 60,
+    "composite_score": 68.3,
+    "supporting_quote": "Woke up today to find a competitor literally copied my landing page. Same headlines, same features list, same pricing structure."
+  },
+  {
+    "post_id": 10,
+    "has_pain_point": false,
+    "reason": "General LinkedIn timing question, no specific pain or problem"
+  },
+  {
+    "post_id": 11,
+    "has_pain_point": true,
+    "pain_point": "Solo SaaS founders experiencing extreme burnout from handling all business functions alone",
+    "intensity": 95,
+    "specificity": 90,
+    "frequency": 95,
+    "composite_score": 93.3,
+    "supporting_quote": "Wake up at 6am to fix bugs, work until midnight on new features. Haven't taken a day off in 8 months. Revenue is growing but I feel like I'm going to break."
+  },
+  {
+    "post_id": 12,
+    "has_pain_point": false,
+    "reason": "Opinion/question about dropshipping perception, no actionable problem"
+  },
+  {
+    "post_id": 13,
+    "has_pain_point": true,
+    "pain_point": "Payment processor fees destroying profit margins on low-ticket subscription products",
+    "intensity": 80,
+    "specificity": 95,
+    "frequency": 85,
+    "composite_score": 86.7,
+    "supporting_quote": "Stripe takes $0.30 + 2.9% per transaction. That's basically 8.9% on a $5 charge. By the time I factor in hosting and email, I'm making $2 per customer."
+  },
+  {
+    "post_id": 14,
+    "has_pain_point": true,
+    "pain_point": "Co-founder equity mismatch when one person works full-time while other keeps day job",
+    "intensity": 75,
+    "specificity": 85,
+    "frequency": 70,
+    "composite_score": 76.7,
+    "supporting_quote": "We agreed on 50/50 equity but now he says he needs to keep his full-time job for at least another year while I'm working on this 80 hours/week."
+  },
+  {
+    "post_id": 15,
+    "has_pain_point": false,
+    "reason": "Self-promotional spam for a course, no genuine problem"
+  },
+  {
+    "post_id": 16,
+    "has_pain_point": true,
+    "pain_point": "Technical founders struggling with bookkeeping and financial management for taxes",
+    "intensity": 80,
+    "specificity": 90,
+    "frequency": 85,
+    "composite_score": 85.0,
+    "supporting_quote": "Haven't reconciled my books in 6 months. Everything is scattered across Stripe, PayPal, bank statements. Tried QuickBooks but it's so confusing."
+  },
+  {
+    "post_id": 17,
+    "has_pain_point": false,
+    "reason": "ProductHunt launch promotion, self-promotional post"
+  },
+  {
+    "post_id": 18,
+    "has_pain_point": true,
+    "pain_point": "Developer paralysis from constantly switching between multiple startup ideas without committing",
+    "intensity": 70,
+    "specificity": 80,
+    "frequency": 85,
+    "composite_score": 78.3,
+    "supporting_quote": "Every Monday I pick a different one to start working on, then by Wednesday I'm doubting it and switching to another idea. I've built 3 MVPs in the last 2 months but never stick with one."
+  },
+  {
+    "post_id": 19,
+    "has_pain_point": false,
+    "reason": "Meme post with image, not a genuine problem discussion"
+  },
+  {
+    "post_id": 20,
+    "has_pain_point": true,
+    "pain_point": "Pricing API products with variable costs while keeping users happy and maintaining profitability",
+    "intensity": 75,
+    "specificity": 85,
+    "frequency": 80,
+    "composite_score": 80.0,
+    "supporting_quote": "I tried $0.01/request and people said it's too expensive. I tried $0.001/request and barely cover costs. I tried monthly subscriptions with usage limits but users hate hitting caps."
+  }
+]

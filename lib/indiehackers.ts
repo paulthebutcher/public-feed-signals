@@ -1,0 +1,142 @@
+export type IndieHackersPost = {
+  id: string;
+  title: string;
+  content: string;
+  url: string;
+  score: number;
+  comments: number;
+  author: string;
+  published: string;
+  age_hours: number;
+};
+
+/**
+ * Fetch Indie Hackers posts via unofficial RSS feed
+ * Source: https://feed.indiehackers.world/
+ * Note: RSS parsing done server-side, simple extraction from XML
+ */
+export async function fetchIndieHackersRSS(): Promise<any[]> {
+  const url = 'https://feed.indiehackers.world/posts.rss';
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'ProblemSignalMiner/1.0',
+      },
+      next: { revalidate: 60 }, // Cache for 1 min
+    });
+
+    if (!response.ok) return [];
+
+    const xmlText = await response.text();
+
+    // Simple regex-based RSS parsing (works server-side)
+    const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+    const posts: any[] = [];
+
+    let match;
+    while ((match = itemRegex.exec(xmlText)) !== null) {
+      const itemContent = match[1];
+
+      const title = (itemContent.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) ||
+                     itemContent.match(/<title>(.*?)<\/title>/))?.[1] || '';
+      const link = itemContent.match(/<link>(.*?)<\/link>/)?.[1] || '';
+      const description = (itemContent.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) ||
+                          itemContent.match(/<description>(.*?)<\/description>/))?.[1] || '';
+      const pubDate = itemContent.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || '';
+      const author = (itemContent.match(/<dc:creator><!\[CDATA\[(.*?)\]\]><\/dc:creator>/) ||
+                     itemContent.match(/<dc:creator>(.*?)<\/dc:creator>/) ||
+                     itemContent.match(/<author>(.*?)<\/author>/))?.[1] || 'unknown';
+
+      // Extract ID from URL
+      const idMatch = link.match(/\/([^\/]+)$/);
+      const id = idMatch ? idMatch[1] : String(Date.now());
+
+      posts.push({
+        id,
+        title,
+        link,
+        description,
+        pubDate,
+        author,
+      });
+    }
+
+    return posts;
+  } catch (error) {
+    console.error('Indie Hackers RSS fetch failed:', error);
+    return [];
+  }
+}
+
+/**
+ * Format IH post to our standard format
+ */
+function formatPost(post: any): IndieHackersPost {
+  const pubDate = post.pubDate ? new Date(post.pubDate) : new Date();
+  const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
+
+  // Clean HTML from description
+  const content = (post.description || '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&#x27;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x2F;/g, '/')
+    .replace(/&amp;/g, '&');
+
+  return {
+    id: post.id,
+    title: post.title || '',
+    content,
+    url: post.link,
+    score: 0, // RSS doesn't provide scores
+    comments: 0, // RSS doesn't provide comment counts
+    author: post.author,
+    published: pubDate.toISOString(),
+    age_hours: ageHours,
+  };
+}
+
+/**
+ * Fetch recent Indie Hackers posts (last 30 days with content)
+ * Note: Server-side only (uses DOMParser from Node.js)
+ */
+export async function fetchRecentIndieHackersPosts(limit: number = 30): Promise<IndieHackersPost[]> {
+  const thirtyDaysAgo = 30 * 24; // hours (evergreen pain points)
+
+  const posts = await fetchIndieHackersRSS();
+  if (!posts) return [];
+
+  // Filter and format
+  const formattedPosts = posts
+    .map(formatPost)
+    .filter((post) => {
+      // Must have content (lowered threshold for better coverage)
+      if (!post.content || post.content.length < 50) return false;
+
+      // Must be recent (last 30 days)
+      if (post.age_hours > thirtyDaysAgo) return false;
+
+      return true;
+    });
+
+  return formattedPosts.slice(0, limit);
+}
+
+/**
+ * Search Indie Hackers posts by keywords
+ */
+export async function searchIndieHackersPosts(
+  keywords: string,
+  limit: number = 30
+): Promise<IndieHackersPost[]> {
+  const posts = await fetchRecentIndieHackersPosts(limit * 2);
+
+  console.log(`[IH] Fetched ${posts.length} recent posts - returning all for semantic scoring`);
+
+  // NO keyword filtering - let semantic scoring handle relevance
+  // This allows "startup" to match "indie maker", "building in public", etc.
+  return posts.slice(0, limit);
+}

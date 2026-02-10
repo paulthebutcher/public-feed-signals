@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import design system tokens */
+:root {
+  /* --- Typography --- */
+  --font-display: 'DM Serif Display', 'Georgia', serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3125rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.375rem;
+  --text-4xl: 3.25rem;
+
+  /* Line heights */
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* Letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: -0.011em;
+  --tracking-wide: 0.05em;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Cool Slate — dark mode neutrals */
+  --slate-50:  #F7F8FA;
+  --slate-100: #ECEEF3;
+  --slate-200: #DFE2E9;
+  --slate-300: #CBD0DB;
+  --slate-400: #9CA3AF;
+  --slate-500: #7C8492;
+  --slate-600: #6B7280;
+  --slate-700: #374151;
+  --slate-800: #1F2937;
+  --slate-900: #111827;
+  --slate-950: #0B0D14;
+
+  /* Copper — accent */
+  --copper-50:  #FFF5EE;
+  --copper-100: #FFE6D4;
+  --copper-200: #FFCAA8;
+  --copper-300: #F0A06A;
+  --copper-400: #D4885C;
+  --copper-500: #C06830;
+  --copper-600: #A0522D;
+  --copper-700: #7A3E22;
+  --copper-800: #5C2E18;
+  --copper-900: #3D2415;
+
+  /* Amber — signal */
+  --amber-50:  #FEF3C7;
+  --amber-100: #FDE68A;
+  --amber-200: #FCD34D;
+  --amber-300: #FBBF24;
+  --amber-400: #F59E0B;
+  --amber-500: #D97706;
+  --amber-600: #B45309;
+  --amber-700: #92400E;
+  --amber-800: #78350F;
+
+  /* Semantic Tokens: Dark Mode */
+  --bg-primary:     var(--slate-950);
+  --bg-secondary:   var(--slate-900);
+  --bg-tertiary:    var(--slate-800);
+  --bg-elevated:    var(--slate-800);
+  --bg-sunken:      #06070A;
+  --bg-overlay:     rgba(11, 13, 20, 0.75);
+  --bg-accent-solid: var(--copper-500);
+  --bg-accent-soft: rgba(192, 104, 48, 0.12);
+  --bg-signal-solid: var(--amber-400);
+  --bg-signal-soft: rgba(245, 158, 11, 0.12);
+
+  --text-primary:    var(--slate-100);
+  --text-secondary:  var(--slate-400);
+  --text-tertiary:   var(--slate-600);
+  --text-inverse:    var(--slate-900);
+  --text-accent:     var(--copper-400);
+  --text-signal:     var(--amber-300);
+  --text-on-accent:  #FFFFFF;
+
+  --border-default:  var(--slate-700);
+  --border-subtle:   var(--slate-800);
+  --border-strong:   var(--slate-600);
+  --border-accent:   var(--copper-600);
+  --border-focus:    var(--copper-400);
+
+  /* Spacing */
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-5:   1.25rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+
+  /* Radius */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+
+  /* Shadows */
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md:   0 4px 8px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg:   0 12px 24px rgba(0, 0, 0, 0.35), 0 4px 8px rgba(0, 0, 0, 0.2);
+  --shadow-focus: 0 0 0 3px rgba(212, 136, 92, 0.2);
+
+  /* Motion */
+  --duration-fast:    150ms;
+  --duration-normal:  250ms;
+  --ease-default:   cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-primary);
+}
+
+::selection {
+  background-color: var(--copper-800);
+  color: var(--slate-100);
+}
