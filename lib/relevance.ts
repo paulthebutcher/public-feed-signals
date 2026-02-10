@@ -102,7 +102,7 @@ Return ONLY a valid JSON array with this exact format (no markdown, no explanati
       .slice(0, topN)
       .map(({ post }) => post);
 
-    console.log(`[Relevance] Scored ${posts.length} posts, kept ${scoredPosts.length} with score >40 (${scoredPosts.map((p, i) => scores.find(s => s.index === posts.indexOf(p))?.score).filter(Boolean).join(', ')})`);
+    console.log(`[Relevance] Scored ${posts.length} posts, kept ${scoredPosts.length} with score >40 (${scoredPosts.map((p) => scores.find(s => s.index === posts.indexOf(p))?.score).filter(Boolean).join(', ')})`);
 
     return scoredPosts;
   } catch (error) {

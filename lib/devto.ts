@@ -92,7 +92,7 @@ export async function fetchRecentDevToPosts(limit: number = 30): Promise<DevToPo
       return true;
     })
     // Remove duplicates by ID
-    .filter((post, index, self) => self.findIndex((p) => p.id === post.id) === index)
+    .filter((post, index, self) => self.findIndex((p: DevToPost) => p.id === post.id) === index)
     // Sort by reactions (quality signal)
     .sort((a, b) => b.score - a.score);
 

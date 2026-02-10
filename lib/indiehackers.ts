@@ -10,12 +10,21 @@ export type IndieHackersPost = {
   age_hours: number;
 };
 
+interface RSSPost {
+  title: string;
+  link: string;
+  description: string;
+  pubDate: string;
+  score?: number;
+  comments?: number;
+}
+
 /**
  * Fetch Indie Hackers posts via unofficial RSS feed
  * Source: https://feed.indiehackers.world/
  * Note: RSS parsing done server-side, simple extraction from XML
  */
-export async function fetchIndieHackersRSS(): Promise<any[]> {
+export async function fetchIndieHackersRSS(): Promise<RSSPost[]> {
   const url = 'https://feed.indiehackers.world/posts.rss';
 
   try {
@@ -32,7 +41,7 @@ export async function fetchIndieHackersRSS(): Promise<any[]> {
 
     // Simple regex-based RSS parsing (works server-side)
     const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-    const posts: any[] = [];
+    const posts: RSSPost[] = [];
 
     let match;
     while ((match = itemRegex.exec(xmlText)) !== null) {
@@ -72,7 +81,7 @@ export async function fetchIndieHackersRSS(): Promise<any[]> {
 /**
  * Format IH post to our standard format
  */
-function formatPost(post: any): IndieHackersPost {
+function formatPost(post: RSSPost): IndieHackersPost {
   const pubDate = post.pubDate ? new Date(post.pubDate) : new Date();
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
 

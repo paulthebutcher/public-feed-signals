@@ -12,6 +12,21 @@ export type SOQuestion = {
   has_accepted_answer: boolean;
 };
 
+interface SOAPIQuestion {
+  question_id: number;
+  title: string;
+  body?: string;
+  link: string;
+  score: number;
+  answer_count: number;
+  creation_date: number;
+  tags?: string[];
+  is_answered?: boolean;
+  owner?: {
+    display_name?: string;
+  };
+}
+
 /**
  * Search Stack Overflow questions
  *
@@ -49,7 +64,7 @@ export async function searchStackOverflow(
       return [];
     }
 
-    const questions = data.items.map((q: any) => formatQuestion(q));
+    const questions = data.items.map((q: SOAPIQuestion) => formatQuestion(q));
 
     // Filter for recent (30 days) and high engagement
     const thirtyDaysAgo = 30 * 24;
@@ -67,7 +82,7 @@ export async function searchStackOverflow(
   }
 }
 
-function formatQuestion(question: any): SOQuestion {
+function formatQuestion(question: SOAPIQuestion): SOQuestion {
   const pubDate = new Date(question.creation_date * 1000); // Unix timestamp
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
 

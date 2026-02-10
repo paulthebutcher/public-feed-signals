@@ -10,10 +10,21 @@ export type HNPost = {
   age_hours: number;
 };
 
+interface HNStory {
+  id: number;
+  title: string;
+  text?: string;
+  url?: string;
+  score: number;
+  descendants?: number;
+  time: number;
+  by?: string;
+}
+
 /**
  * Fetch a single story from HackerNews API
  */
-export async function getHNStory(storyId: number): Promise<any> {
+export async function getHNStory(storyId: number): Promise<HNStory | null> {
   const url = `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
   const response = await fetch(url, { next: { revalidate: 60 } }); // Cache for 1 min
   if (!response.ok) return null;
@@ -34,7 +45,7 @@ export async function getAskHNStoryIds(limit: number = 50): Promise<number[]> {
 /**
  * Format HN story to our standard format
  */
-function formatPost(story: any): HNPost {
+function formatPost(story: HNStory): HNPost {
   const timestamp = story.time || 0;
   const pubDate = new Date(timestamp * 1000);
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
@@ -108,7 +119,6 @@ export async function searchAskHNPosts(keywords: string, limit: number = 30): Pr
 
   // Score posts by keyword relevance
   const scoredPosts = posts.map((post) => {
-    const searchText = `${post.title} ${post.content}`.toLowerCase();
     const score = keywordParts.reduce((acc, keyword) => {
       const titleMatches = (post.title.toLowerCase().match(new RegExp(keyword, 'g')) || []).length;
       const contentMatches = (post.content.toLowerCase().match(new RegExp(keyword, 'g')) || []).length;
