@@ -27,7 +27,7 @@ export async function clusterPainPoints(
     return painPoints.map((pp, i) => ({
       ...pp,
       cluster_id: `cluster_${i}`,
-      cluster_theme: pp.pain_point,
+      cluster_theme: pp.pain_point || 'Unknown',
       mention_count: 1,
       is_representative: true,
     }));
@@ -40,7 +40,7 @@ export async function clusterPainPoints(
   const prompt = `You are grouping similar pain points into clusters.
 
 Pain points:
-${painPoints.map((p, i) => `[${i}] ${p.pain_point} (score: ${p.composite_score.toFixed(1)})`).join('\n')}
+${painPoints.map((p, i) => `[${i}] ${p.pain_point} (score: ${p.composite_score?.toFixed(1) || 'N/A'})`).join('\n')}
 
 Group these into clusters of SIMILAR problems. For each cluster:
 1. Choose the highest-scoring or most specific pain point as the representative
@@ -127,7 +127,8 @@ Return ONLY valid JSON (no markdown, no explanation):
 
       const similarPoints = clusterPainPoints
         .filter((_, i) => cluster.indices[i] !== repIndex)
-        .map(pp => pp.pain_point);
+        .map(pp => pp.pain_point)
+        .filter((p): p is string => p !== undefined);
 
       clustered.push({
         ...representative,
@@ -157,7 +158,7 @@ function fallbackNoClustering(painPoints: ExtractionResult[]): ClusteredPainPoin
   return painPoints.map((pp, i) => ({
     ...pp,
     cluster_id: `cluster_${i}`,
-    cluster_theme: pp.pain_point,
+    cluster_theme: pp.pain_point || 'Unknown',
     mention_count: 1,
     is_representative: true,
   }));

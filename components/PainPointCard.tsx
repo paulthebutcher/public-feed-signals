@@ -1,5 +1,5 @@
 type PainPoint = {
-  post_id: number;
+  post_id: string | number;
   pain_point: string;
   intensity: number;
   specificity: number;

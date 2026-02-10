@@ -17,8 +17,9 @@ interface DevToArticle {
   description?: string;
   published_at: string;
   url: string;
-  positive_reactions_count: number;
-  comments_count: number;
+  positive_reactions_count?: number;
+  public_reactions_count?: number;
+  comments_count?: number;
   user?: {
     username?: string;
   };

@@ -11,10 +11,12 @@ export type IndieHackersPost = {
 };
 
 interface RSSPost {
+  id?: string;
   title: string;
   link: string;
   description: string;
   pubDate: string;
+  author?: string;
   score?: number;
   comments?: number;
 }
@@ -96,13 +98,13 @@ function formatPost(post: RSSPost): IndieHackersPost {
     .replace(/&amp;/g, '&');
 
   return {
-    id: post.id,
+    id: post.id || post.link,
     title: post.title || '',
     content,
     url: post.link,
     score: 0, // RSS doesn't provide scores
     comments: 0, // RSS doesn't provide comment counts
-    author: post.author,
+    author: post.author || 'unknown',
     published: pubDate.toISOString(),
     age_hours: ageHours,
   };

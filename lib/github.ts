@@ -74,7 +74,7 @@ export async function searchGitHubIssues(
 
     // Filter for recent (30 days) and with decent discussion
     const thirtyDaysAgo = 30 * 24;
-    const filtered = issues.filter(issue =>
+    const filtered = issues.filter((issue: GitHubIssue) =>
       issue.age_hours < thirtyDaysAgo &&
       issue.comments > 0
     );

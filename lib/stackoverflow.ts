@@ -16,9 +16,11 @@ interface SOAPIQuestion {
   question_id: number;
   title: string;
   body?: string;
+  body_markdown?: string;
   link: string;
   score: number;
   answer_count: number;
+  comment_count?: number;
   creation_date: number;
   tags?: string[];
   is_answered?: boolean;
@@ -68,7 +70,7 @@ export async function searchStackOverflow(
 
     // Filter for recent (30 days) and high engagement
     const thirtyDaysAgo = 30 * 24;
-    const filtered = questions.filter(q =>
+    const filtered = questions.filter((q: SOQuestion) =>
       q.age_hours < thirtyDaysAgo &&
       q.score > 0
     );

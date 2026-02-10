@@ -19,6 +19,7 @@ interface HNStory {
   descendants?: number;
   time: number;
   by?: string;
+  type?: string;
 }
 
 /**
@@ -87,7 +88,7 @@ export async function fetchRecentAskHNPosts(limit: number = 30): Promise<HNPost[
 
   // Filter and format
   const posts = stories
-    .filter((story) => story && story.type === 'story')
+    .filter((story): story is HNStory => story !== null && story.type === 'story')
     .map(formatPost)
     .filter((post) => {
       // Must have content (not just a link)
