@@ -35,6 +35,7 @@ type ExtractionResult = {
 export default function Home() {
   const [keywords, setKeywords] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState('');
   const [results, setResults] = useState<ExtractionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +52,13 @@ export default function Home() {
     setResults(null);
 
     try {
+      // Simulate progress steps
+      setLoadingStep('Fetching posts from 5 sources...');
+
+      setTimeout(() => setLoadingStep('Scoring relevance with AI...'), 3000);
+      setTimeout(() => setLoadingStep('Extracting pain points...'), 8000);
+      setTimeout(() => setLoadingStep('Clustering similar problems...'), 20000);
+
       const response = await fetch('/api/extract', {
         method: 'POST',
         headers: {
@@ -70,6 +78,7 @@ export default function Home() {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
+      setLoadingStep('');
     }
   };
 
@@ -82,39 +91,33 @@ export default function Home() {
             Problem Signal Miner
           </h1>
           <p className="text-secondary text-lg font-body">
-            Extract actionable pain points from HackerNews, Dev.to, and Indie Hackers
+            Find real pain points from HN, Dev.to, GitHub, Stack Overflow & Indie Hackers
           </p>
         </div>
 
-        {/* Search Form */}
+        {/* Search Form - Inline */}
         <form onSubmit={handleSubmit} className="mb-12">
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="keywords" className="block text-sm font-semibold mb-2 text-primary font-body">
-                Keywords or Topics
-              </label>
-              <input
-                id="keywords"
-                type="text"
-                value={keywords}
-                onChange={(e) => setKeywords(e.target.value)}
-                placeholder="e.g., AI coding, startup validation, freelance"
-                className="w-full px-4 py-3 bg-elevated border border-default rounded-md focus:outline-none focus:ring-2 focus:ring-copper-200 focus:border-accent text-primary placeholder-tertiary font-body transition-all duration-fast"
-                disabled={isLoading}
-              />
-              <p className="mt-2 text-xs text-tertiary">
-                Searches HackerNews, Dev.to, and Indie Hackers for problems related to your keywords
-              </p>
-            </div>
-
+          <div className="flex gap-3">
+            <input
+              id="keywords"
+              type="text"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              placeholder="e.g., AI coding, startup validation, freelance"
+              className="flex-1 px-4 py-3 bg-elevated border border-default rounded-md focus:outline-none focus:ring-2 focus:ring-copper-200 focus:border-accent text-primary placeholder-tertiary font-body transition-all duration-fast"
+              disabled={isLoading}
+            />
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 bg-accent-solid hover:brightness-110 text-on-accent font-semibold rounded-md transition-all duration-fast disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97]"
+              className="px-8 py-3 bg-accent-solid hover:brightness-110 text-on-accent font-semibold rounded-md transition-all duration-fast disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.97] whitespace-nowrap"
             >
-              {isLoading ? 'Extracting Pain Points...' : 'Extract Pain Points'}
+              {isLoading ? 'Analyzing...' : 'Find Pain Points'}
             </button>
           </div>
+          <p className="mt-2 text-xs text-tertiary">
+            Searches 5 sources for problems related to your keywords
+          </p>
         </form>
 
         {/* Error Message */}
@@ -125,11 +128,12 @@ export default function Home() {
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading State with Progress */}
         {isLoading && (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-subtle border-t-copper-400"></div>
-            <p className="mt-4 text-secondary">Analyzing discussions from multiple sources...</p>
+            <p className="mt-4 text-primary font-semibold">{loadingStep || 'Starting...'}</p>
+            <p className="mt-2 text-sm text-tertiary">This usually takes ~30 seconds</p>
           </div>
         )}
 
@@ -149,7 +153,13 @@ export default function Home() {
               <div>
                 <p className="text-xs text-secondary">Sources</p>
                 <p className="text-lg font-bold font-display text-primary capitalize">
-                  {results.sources_used.map(s => s === 'hackernews' ? 'HN' : s === 'devto' ? 'Dev.to' : 'IH').join(', ')}
+                  {results.sources_used.map(s =>
+                    s === 'hackernews' ? 'HN' :
+                    s === 'devto' ? 'Dev.to' :
+                    s === 'github' ? 'GitHub' :
+                    s === 'stackoverflow' ? 'SO' :
+                    'IH'
+                  ).join(', ')}
                 </p>
               </div>
               <div>
@@ -182,11 +192,21 @@ export default function Home() {
           <div className="mt-16 p-6 bg-elevated border border-default rounded-lg shadow-xs">
             <h3 className="font-semibold mb-3 text-primary font-body">How it works</h3>
             <ol className="space-y-2 text-sm text-secondary">
-              <li>1. Searches HackerNews, Dev.to, and Indie Hackers for recent posts matching your keywords</li>
-              <li>2. Uses Claude Sonnet 4.5 to extract genuine pain points</li>
-              <li>3. Scores each pain point on intensity, specificity, and frequency</li>
-              <li>4. Ranks results by composite score (highest = most actionable)</li>
+              <li>1. <strong>Fetch</strong>: Searches 5 sources (HN, Dev.to, GitHub, Stack Overflow, Indie Hackers) for recent posts</li>
+              <li>2. <strong>Filter</strong>: AI scores each post for relevance to your keywords (semantic search, not keyword matching)</li>
+              <li>3. <strong>Extract</strong>: Claude analyzes top posts to identify genuine pain points with supporting quotes</li>
+              <li>4. <strong>Score</strong>: Each pain point gets rated 0-100 on:
+                <ul className="ml-6 mt-1 space-y-1">
+                  <li>• <strong>Intensity</strong>: How frustrated/urgent the person sounds</li>
+                  <li>• <strong>Specificity</strong>: How clearly defined the problem is</li>
+                  <li>• <strong>Frequency</strong>: How often this type of problem likely occurs</li>
+                </ul>
+              </li>
+              <li>5. <strong>Cluster</strong>: Groups similar pain points and shows frequency (e.g., &ldquo;5x mentions&rdquo;)</li>
             </ol>
+            <p className="mt-4 text-xs text-tertiary">
+              💡 Composite score = (intensity + specificity + frequency) / 3. Higher scores = more actionable problems.
+            </p>
           </div>
         )}
       </div>

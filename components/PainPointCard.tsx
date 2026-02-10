@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 type PainPoint = {
   post_id: string | number;
   pain_point: string;
@@ -22,6 +26,7 @@ interface PainPointCardProps {
 }
 
 export function PainPointCard({ painPoint, rank }: PainPointCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const getScoreColor = (score: number) => {
     if (score >= 85) return 'text-signal';
     if (score >= 70) return 'text-copper-300';
@@ -54,68 +59,78 @@ export function PainPointCard({ painPoint, rank }: PainPointCardProps) {
   const sourceBadge = getSourceBadge(painPoint.post_source);
 
   return (
-    <div className={`p-6 border rounded-lg shadow-xs ${getScoreBg(painPoint.composite_score)}`}>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2 flex-wrap">
-            <span className="text-2xl font-display font-bold text-tertiary">#{rank}</span>
-            <span className={`text-3xl font-display font-bold ${getScoreColor(painPoint.composite_score)}`}>
-              {painPoint.composite_score.toFixed(1)}
+    <div
+      className={`border rounded-lg shadow-xs cursor-pointer transition-all duration-200 ${getScoreBg(painPoint.composite_score)} ${isExpanded ? 'p-6' : 'p-4'}`}
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      {/* Collapsed Header */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <span className="text-lg font-display font-bold text-tertiary shrink-0">#{rank}</span>
+          <span className={`text-2xl font-display font-bold shrink-0 ${getScoreColor(painPoint.composite_score)}`}>
+            {painPoint.composite_score.toFixed(1)}
+          </span>
+          <span className={`px-2 py-1 text-xs font-semibold rounded-sm border shrink-0 ${sourceBadge.color}`}>
+            {sourceBadge.label}
+          </span>
+          {painPoint.mention_count && painPoint.mention_count > 1 && (
+            <span className="px-2 py-1 text-xs font-semibold rounded-sm border bg-amber-900/20 text-amber-300 border-amber-700 shrink-0">
+              🔥 {painPoint.mention_count}x
             </span>
-            <span className={`px-2 py-1 text-xs font-semibold rounded-sm border ${sourceBadge.color}`}>
-              {sourceBadge.label}
-            </span>
-            {painPoint.mention_count && painPoint.mention_count > 1 && (
-              <span className="px-2 py-1 text-xs font-semibold rounded-sm border bg-amber-900/20 text-amber-300 border-amber-700">
-                🔥 {painPoint.mention_count}x mentions
-              </span>
-            )}
-          </div>
-          <h3 className="text-lg font-semibold text-primary leading-tight font-body">
+          )}
+          <h3 className="text-base font-semibold text-primary leading-tight font-body min-w-0 truncate">
             {painPoint.pain_point}
           </h3>
         </div>
-      </div>
-
-      {/* Score Breakdown */}
-      <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-sunken rounded-md">
-        <div>
-          <p className="text-xs text-secondary mb-1">Intensity</p>
-          <p className="text-lg font-semibold font-display text-primary">{painPoint.intensity}</p>
-        </div>
-        <div>
-          <p className="text-xs text-secondary mb-1">Specificity</p>
-          <p className="text-lg font-semibold font-display text-primary">{painPoint.specificity}</p>
-        </div>
-        <div>
-          <p className="text-xs text-secondary mb-1">Frequency</p>
-          <p className="text-lg font-semibold font-display text-primary">{painPoint.frequency}</p>
+        <div className="text-tertiary shrink-0">
+          {isExpanded ? '▼' : '▶'}
         </div>
       </div>
 
-      {/* Supporting Quote */}
-      <div className="mb-4 p-4 bg-tertiary rounded-md border-l-4 border-copper-600">
-        <p className="text-sm text-secondary italic">
-          &ldquo;{painPoint.supporting_quote}&rdquo;
-        </p>
-      </div>
+      {/* Expanded Details */}
+      {isExpanded && (
+        <div className="mt-4 space-y-4" onClick={(e) => e.stopPropagation()}>
+          {/* Score Breakdown */}
+          <div className="grid grid-cols-3 gap-4 p-4 bg-sunken rounded-md">
+            <div>
+              <p className="text-xs text-secondary mb-1">Intensity</p>
+              <p className="text-lg font-semibold font-display text-primary">{painPoint.intensity}</p>
+            </div>
+            <div>
+              <p className="text-xs text-secondary mb-1">Specificity</p>
+              <p className="text-lg font-semibold font-display text-primary">{painPoint.specificity}</p>
+            </div>
+            <div>
+              <p className="text-xs text-secondary mb-1">Frequency</p>
+              <p className="text-lg font-semibold font-display text-primary">{painPoint.frequency}</p>
+            </div>
+          </div>
 
-      {/* Source Post */}
-      <div className="flex items-center justify-between text-sm">
-        <a
-          href={painPoint.post_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:text-copper-300 hover:underline transition-colors duration-fast flex-1 truncate"
-        >
-          {painPoint.post_title}
-        </a>
-        <div className="flex items-center gap-4 ml-4 text-secondary">
-          <span>{painPoint.post_score} pts</span>
-          <span>{painPoint.post_comments} comments</span>
+          {/* Supporting Quote */}
+          <div className="p-4 bg-tertiary rounded-md border-l-4 border-copper-600">
+            <p className="text-sm text-secondary italic">
+              &ldquo;{painPoint.supporting_quote}&rdquo;
+            </p>
+          </div>
+
+          {/* Source Post */}
+          <div className="flex items-center justify-between text-sm">
+            <a
+              href={painPoint.post_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:text-copper-300 hover:underline transition-colors duration-fast flex-1 truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {painPoint.post_title}
+            </a>
+            <div className="flex items-center gap-4 ml-4 text-secondary">
+              <span>{painPoint.post_score} pts</span>
+              <span>{painPoint.post_comments} comments</span>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
