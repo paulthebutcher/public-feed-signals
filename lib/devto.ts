@@ -11,6 +11,21 @@ export type DevToPost = {
   tags: string[];
 };
 
+interface DevToArticle {
+  id: number;
+  title: string;
+  description?: string;
+  published_at: string;
+  url: string;
+  positive_reactions_count: number;
+  comments_count: number;
+  user?: {
+    username?: string;
+  };
+  tag_list?: string[];
+  body_markdown?: string;
+}
+
 /**
  * Fetch articles from Dev.to API
  * Docs: https://developers.forem.com/api/v0
@@ -18,7 +33,7 @@ export type DevToPost = {
 export async function fetchDevToArticles(params: {
   tag?: string;
   per_page?: number;
-} = {}): Promise<any[]> {
+} = {}): Promise<DevToArticle[]> {
   const { tag, per_page = 30 } = params;
 
   const url = new URL('https://dev.to/api/articles');
@@ -39,7 +54,7 @@ export async function fetchDevToArticles(params: {
 /**
  * Format Dev.to article to our standard format
  */
-function formatPost(article: any): DevToPost {
+function formatPost(article: DevToArticle): DevToPost {
   const pubDate = new Date(article.published_at);
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
 
@@ -69,7 +84,7 @@ export async function fetchRecentDevToPosts(limit: number = 30): Promise<DevToPo
   // Fetch articles from multiple relevant tags
   const tags = ['startup', 'entrepreneur', 'business', 'showdev', 'discuss', 'help'];
 
-  const allArticles: any[] = [];
+  const allArticles: DevToArticle[] = [];
 
   // Fetch from each tag (parallel)
   const tagPromises = tags.map((tag) =>

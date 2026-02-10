@@ -12,6 +12,25 @@ export type GitHubIssue = {
   repository: string;
 };
 
+interface GitHubAPIIssue {
+  id: number;
+  number: number;
+  title: string;
+  body?: string;
+  html_url: string;
+  created_at: string;
+  comments: number;
+  user?: {
+    login?: string;
+  };
+  labels?: Array<{
+    name: string;
+  }>;
+  reactions?: {
+    total_count?: number;
+  };
+}
+
 /**
  * Search GitHub issues
  *
@@ -51,7 +70,7 @@ export async function searchGitHubIssues(
       return [];
     }
 
-    const issues = data.items.map((issue: any) => formatIssue(issue));
+    const issues = data.items.map((issue: GitHubAPIIssue) => formatIssue(issue));
 
     // Filter for recent (30 days) and with decent discussion
     const thirtyDaysAgo = 30 * 24;
@@ -69,7 +88,7 @@ export async function searchGitHubIssues(
   }
 }
 
-function formatIssue(issue: any): GitHubIssue {
+function formatIssue(issue: GitHubAPIIssue): GitHubIssue {
   const pubDate = new Date(issue.created_at);
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
 
@@ -90,7 +109,7 @@ function formatIssue(issue: any): GitHubIssue {
     author: issue.user?.login || 'unknown',
     published: pubDate.toISOString(),
     age_hours: ageHours,
-    labels: (issue.labels || []).map((l: any) => l.name),
+    labels: (issue.labels || []).map((l) => l.name),
     repository,
   };
 }

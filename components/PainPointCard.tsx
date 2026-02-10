@@ -97,7 +97,7 @@ export function PainPointCard({ painPoint, rank }: PainPointCardProps) {
       {/* Supporting Quote */}
       <div className="mb-4 p-4 bg-tertiary rounded-md border-l-4 border-copper-600">
         <p className="text-sm text-secondary italic">
-          "{painPoint.supporting_quote}"
+          &ldquo;{painPoint.supporting_quote}&rdquo;
         </p>
       </div>
 
