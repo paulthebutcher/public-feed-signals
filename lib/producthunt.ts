@@ -11,6 +11,39 @@ export type ProductHuntPost = {
   category: string;
 };
 
+interface ProductHuntGraphQLNode {
+  id: string;
+  name: string;
+  tagline?: string;
+  description?: string;
+  votesCount: number;
+  commentsCount: number;
+  createdAt: string;
+  url: string;
+  user?: {
+    name: string;
+  };
+  topics?: {
+    edges: Array<{
+      node: {
+        name: string;
+      };
+    }>;
+  };
+}
+
+interface ProductHuntGraphQLEdge {
+  node: ProductHuntGraphQLNode;
+}
+
+interface ProductHuntGraphQLResponse {
+  data?: {
+    posts?: {
+      edges: ProductHuntGraphQLEdge[];
+    };
+  };
+}
+
 /**
  * Search Product Hunt for product launches
  *
@@ -72,14 +105,14 @@ export async function searchProductHunt(
       return [];
     }
 
-    const data = await response.json();
+    const data = await response.json() as ProductHuntGraphQLResponse;
 
     if (!data.data?.posts?.edges) {
       console.log('[ProductHunt] No results found');
       return [];
     }
 
-    const posts = data.data.posts.edges.map((edge: any) => formatPost(edge.node));
+    const posts = data.data.posts.edges.map((edge: ProductHuntGraphQLEdge) => formatPost(edge.node));
 
     // Filter for posts with substantial descriptions (where problems are mentioned)
     const filtered = posts.filter((post: ProductHuntPost) =>
@@ -95,7 +128,7 @@ export async function searchProductHunt(
   }
 }
 
-function formatPost(post: any): ProductHuntPost {
+function formatPost(post: ProductHuntGraphQLNode): ProductHuntPost {
   const pubDate = new Date(post.createdAt);
   const ageHours = (Date.now() - pubDate.getTime()) / (1000 * 60 * 60);
 
