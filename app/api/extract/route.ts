@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     // Validate sources
     const validSources: DataSource[] = Array.isArray(sources)
-      ? sources.filter((s: string) => ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory', 'quora', 'medium', 'all'].includes(s))
+      ? sources.filter((s: string) => ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory', 'medium', 'all'].includes(s))
       : ['all'];
 
     // Step 1: Always expand keywords to related terms (smart search)

@@ -190,7 +190,7 @@ function mediumToPost(post: MediumPost): Post {
   };
 }
 
-export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'quora' | 'medium' | 'all';
+export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'medium' | 'all';
 
 /**
  * Search across multiple data sources
@@ -201,7 +201,7 @@ export async function searchMultipleSources(
   limit: number = 20
 ): Promise<Post[]> {
   const enabledSources = sources.includes('all')
-    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory', 'quora', 'medium']
+    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory', 'medium']
     : sources;
 
   // Fetch 3x requested limit per source, then filter down for better results

@@ -26,16 +26,18 @@ export async function searchMedium(
   limit: number = 30
 ): Promise<MediumPost[]> {
   try {
-    // Medium RSS feeds by tag
-    const tags = ['startup', 'entrepreneurship', 'founder', 'saas', 'business', 'indie-hacker'];
+    // Medium RSS feeds by tag (reduced to avoid 429 rate limiting)
+    const tags = ['startup', 'entrepreneurship'];
 
     const allPosts: MediumPost[] = [];
 
-    // Fetch from multiple tags in parallel
-    const fetchPromises = tags.map(tag => fetchMediumRSS(tag));
-    const results = await Promise.all(fetchPromises);
-
-    results.forEach(posts => allPosts.push(...posts));
+    // Fetch sequentially with delay to avoid rate limiting
+    for (const tag of tags) {
+      const posts = await fetchMediumRSS(tag);
+      allPosts.push(...posts);
+      // Small delay between requests to avoid 429
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
 
     // Filter by keyword relevance
     const keywordLower = keywords.toLowerCase();
