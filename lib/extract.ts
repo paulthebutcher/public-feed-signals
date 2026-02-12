@@ -144,7 +144,10 @@ export async function extractPainPoints(posts: Post[]): Promise<ExtractionResult
       const jsonMatch = responseText.match(/\[[\s\S]*\]/);
       if (!jsonMatch) {
         console.error('[Extract] Claude response:', responseText.substring(0, 500));
-        throw new Error('No JSON array found in Claude response');
+        // Include actual Claude response in error for debugging
+
+        const preview = responseText.substring(0, 200).replace(/\n/g, ' ');
+throw new Error(`No JSON array found in Claude response. Claude said: "${preview}..."`);
       }
       const results = JSON.parse(jsonMatch[0]) as ExtractionResult[];
       return results;
