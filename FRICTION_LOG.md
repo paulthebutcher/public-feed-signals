@@ -814,7 +814,7 @@ Test cases:
 1. Implement feature (passes type checks)
 2. User tests, finds it's WORSE
 3. Fix math bug
-4. User tests, STILL bad  
+4. User tests, STILL bad
 5. Fix quality issue
 6. User satisfied
 
@@ -829,3 +829,274 @@ Test cases:
 "TypeScript + ESLint = syntactically correct
 Manual testing = actually works as intended
 BOTH required before 'ready'"
+
+---
+
+## DAY 2 FRICTION: Problem Phrases vs Topic Keywords (February 11, 2026)
+
+### ❌ Optimization Made Results WORSE
+
+**Context:**
+- After Day 1 improvements, had 8 pain points from ~50 posts
+- Wanted 40-50+ pain points (target goal)
+- Day 2 goal: Aggressive volume optimizations
+
+**What I did:**
+1. ✅ Increased posts per keyword: 30→50 (+67%)
+2. ✅ Increased scoring limit: 100→200 (+100%)
+3. ✅ Lowered relevance threshold: 40→30 (more lenient)
+4. ✅ Expanded Dev.to tags: 15→20 (+33%)
+5. ✅ Increased Dev.to posts/tag: 50→100 (+100%)
+6. ✅ Increased HN fetch: 3x→5x limit
+
+**Expected result:** 2-3x more pain points (8→16-24)
+**Actual result:** 9 pain points (only +1)
+**Extraction rate:** Dropped from 33% to 26.5%
+
+**Time wasted:** 4 hours of aggressive optimizations with minimal impact
+
+---
+
+### ❌ Root Cause: Keyword Matching Bottleneck
+
+**The critical issue I missed:**
+
+From previous day, I changed keyword expansion from:
+```javascript
+// Day 1 (Topic keywords):
+"startup" → ["founder", "entrepreneur", "indie", "saas"]
+
+// Day 2 (Problem phrases):
+"startup" → ["can't find product market fit",
+             "spending too much on tools",
+             "struggling with customer acquisition"]
+```
+
+**Why problem phrases failed:**
+```typescript
+// Sources do substring matching:
+const matched = post.title.includes("can't find product market fit");
+// Almost NEVER matches! Posts don't use exact long phrases.
+```
+
+**Evidence from production:**
+- Only 9 pain points from ~34 posts reaching extraction
+- Should have been 100-150 posts with optimizations
+- 99% of posts filtered out by keyword matching
+- Pain points were off-topic (developer tools, not startup problems)
+
+**Time cost:**
+- 2 hours diagnosing "why aren't optimizations working?"
+- 1 hour implementing 3 new data sources (PH, YC RFS, Failory)
+- They returned 0 results (couldn't test in VM)
+- 1 hour fixing TypeScript errors from new sources
+- **Total wasted:** 4 hours on wrong root cause
+
+---
+
+### 🎯 The Fix: Back to Topic Keywords
+
+**Changed keyword generation:**
+```javascript
+// BEFORE (Problem phrases - 2-5 words):
+"startup" → ["can't find product market fit",      // rarely matches
+             "spending too much on tools",          // almost never matches
+             "struggling with customer acquisition"] // wrong phrasing
+
+// AFTER (Topic keywords - 1-2 words):
+"startup" → ["founder", "entrepreneur", "bootstrapping",
+             "saas", "indie", "business", "launch",
+             "validation", "customers", "growth", "funding", "mvp"]
+```
+
+**Why this works:**
+1. **Match rate:** "founder" appears in thousands of posts vs "can't find product market fit" in ~5
+2. **Coverage:** 12 keywords vs 8 phrases = +50% more
+3. **Division of labor:**
+   - Keyword matching: Broad filter (is this post about the domain?)
+   - Relevance scoring: Semantic filter (does it discuss problems?)
+   - Pain extraction: Quality filter (what specific pain points?)
+
+**Expected improvement:** 3-4x more posts → 25-35 pain points
+
+---
+
+### Learnings: AI-Generated Content Integration
+
+**Critical insight:** When AI generates content that feeds into another system, must consider HOW that system uses it.
+
+**What I should have asked:**
+1. "How will these keywords be used?" → Substring matching
+2. "What's the match rate for long phrases?" → Very low
+3. "Does this HELP or HURT the filtering?" → Hurts!
+
+**Pattern identified:**
+```
+AI generates → System consumes → Check compatibility!
+     ↓              ↓                    ↓
+Problem phrases  String matching    Almost no matches
+```
+
+**Prevention checklist for AI-generated content:**
+```markdown
+## AI-Generated Content That Feeds Into Systems
+
+BEFORE implementing:
+1. [ ] Understand how the content will be USED
+2. [ ] What operations will be performed on it?
+3. [ ] What's the success rate of those operations?
+4. [ ] Test samples: Do they work in the target system?
+
+Example (keyword expansion):
+- Generated: "can't find product market fit"
+- Usage: `post.title.includes(keyword)`
+- Success rate: Check manually - "Do HN posts contain this exact phrase?"
+- Result: NO → Change generation strategy
+
+Don't assume AI-generated content is automatically usable!
+```
+
+---
+
+### Template: Keyword/Search Term Generation
+
+```markdown
+## Generating Search Terms via AI
+
+Requirements:
+1. **Length:** Specify exactly (e.g., "1-2 words max")
+2. **Format:** How will these be used? (substring? regex? API query?)
+3. **Test:** Manually verify 3-5 examples work in target system
+4. **Anti-examples:** Show what NOT to generate
+
+Example prompt structure:
+```
+Generate 10-12 TOPIC KEYWORDS (1-2 words each).
+
+CRITICAL: SHORT, COMMON terms that appear FREQUENTLY.
+- 1-2 words maximum (NOT phrases)
+- Common terminology (how people actually talk)
+- Think: what words appear in titles?
+
+Examples:
+- "startup" → ["founder", "entrepreneur", "saas", "indie"]
+
+Do NOT generate:
+- Multi-word phrases: "early-stage companies"
+- Formal language: "entrepreneurship"
+- Long descriptions: "can't find product market fit"
+
+These terms will be used in substring matching: post.title.includes(term)
+```
+
+Quality check BEFORE deploying:
+- [ ] All terms are 1-2 words
+- [ ] Test each term: Does it appear in sample posts?
+- [ ] No formal jargon or long phrases
+```
+
+---
+
+### ROI Analysis: Day 2 Learnings
+
+**Time spent on wrong optimizations:**
+- Volume optimizations: 2 hours (good changes, but not the bottleneck)
+- New data sources: 2 hours (couldn't even test them)
+- Total: 4 hours with minimal improvement (+1 pain point)
+
+**Time spent on correct fix:**
+- Diagnose root cause: 30 minutes (substring matching bottleneck)
+- Implement topic keywords: 15 minutes
+- Expected result: 3-4x improvement (9→25-35 pain points)
+
+**What should have happened:**
+1. Check keyword matching logs FIRST (see what's filtering out posts)
+2. Identify: "Problem phrases match 0-5 posts each"
+3. Fix keyword generation (15 min)
+4. THEN optimize volumes if needed
+
+**Prevention:**
+```markdown
+## Optimization Priority Checklist
+
+BEFORE adding capacity (volume, parallelization, etc.):
+1. [ ] Check bottleneck: Where are items getting filtered out?
+2. [ ] Verify quality: Are the right items passing through?
+3. [ ] Look at logs: What's the drop-off at each stage?
+
+Common mistake: Optimizing upstream when downstream is the problem
+- ❌ Fetch more posts → but 99% filtered by keywords
+- ✅ Fix keywords → now more posts pass through
+```
+
+---
+
+### Pattern: "Optimize Wrong Layer"
+
+**What happened:**
+```
+Fetch → Keyword Match → Relevance → Extract
+ 500      ↓ 30         ↓ 25        ↓ 9
+posts    (94% dropped)
+```
+
+**What I optimized:** Fetch (500→1000 posts)
+**What needed optimization:** Keyword matching (94% drop)
+
+**Time cost:** 4 hours optimizing the wrong layer
+
+**Pattern to watch for:**
+- Large drop-off at one stage
+- Optimizing earlier stages doesn't help
+- Must fix the bottleneck stage first
+
+**New rule:**
+"Before optimizing throughput, check where the drop-off is.
+Optimize the bottleneck, not the source."
+
+---
+
+### Updated Templates
+
+**Template: Performance Optimization**
+```markdown
+## Before Optimizing Performance
+
+Step 1: Identify bottleneck
+- [ ] Log metrics at each pipeline stage
+- [ ] Calculate drop-off percentages
+- [ ] Find the largest drop-off
+
+Step 2: Diagnose WHY items are dropped
+- [ ] Look at actual data that was filtered
+- [ ] Check if filter logic is correct
+- [ ] Verify quality of inputs to that stage
+
+Step 3: Optimize the bottleneck FIRST
+- [ ] Fix quality issues (e.g., keyword matching)
+- [ ] Adjust thresholds if too aggressive
+- [ ] Only then increase volume
+
+Example (keyword matching bottleneck):
+- ❌ Don't: Fetch 2x more posts
+- ✅ Do: Fix keyword generation (short terms vs long phrases)
+- Result: 3-4x improvement with LESS data
+```
+
+---
+
+## Day 2 Summary: Core Learning
+
+**Biggest mistake:** Spent 4 hours on aggressive volume optimizations without checking if volume was actually the bottleneck.
+
+**Actual problem:** Keyword matching filtered out 94% of posts due to problem phrases being too specific for substring matching.
+
+**Solution:** Change keyword generation strategy (problem phrases → topic keywords).
+
+**Time saved if diagnosed correctly:** 4 hours
+**Implementation time for correct fix:** 15 minutes
+**ROI of proper diagnosis:** 16x
+
+**Key takeaway:**
+"When optimizations don't work, check WHERE items are being dropped.
+Don't add more capacity until you fix quality at the bottleneck."

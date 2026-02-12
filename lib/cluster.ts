@@ -90,20 +90,32 @@ Return ONLY valid JSON (no markdown, no explanation):
       return fallbackNoClustering(painPoints);
     }
 
-    // Extract JSON object from response
-    const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error('[Cluster] No JSON found in response');
-      return fallbackNoClustering(painPoints);
+    // Strip markdown code blocks if Claude wraps the JSON
+    let jsonText = textContent.text.trim();
+    if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
     }
 
-    const result: {
+    // Try to parse directly first
+    let result: {
       clusters: Array<{
         theme: string;
         indices: number[];
         representative_index: number;
       }>;
-    } = JSON.parse(jsonMatch[0]);
+    };
+
+    try {
+      result = JSON.parse(jsonText);
+    } catch {
+      // Fallback: Extract JSON object from response text
+      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        console.error('[Cluster] No JSON found in response');
+        return fallbackNoClustering(painPoints);
+      }
+      result = JSON.parse(jsonMatch[0]);
+    }
 
     if (!result.clusters || !Array.isArray(result.clusters)) {
       console.error('[Cluster] Invalid clusters format');

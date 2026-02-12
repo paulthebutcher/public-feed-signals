@@ -115,14 +115,26 @@ export async function extractPainPoints(posts: Post[]): Promise<ExtractionResult
 
     const responseText = message.content[0].type === 'text' ? message.content[0].text : '';
 
-    // Extract JSON from response
-    const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      throw new Error('No JSON array found in Claude response');
+    // Strip markdown code blocks if Claude wraps the JSON
+    let jsonText = responseText.trim();
+    if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
     }
 
-    const results = JSON.parse(jsonMatch[0]) as ExtractionResult[];
-    return results;
+    // Try to parse directly first
+    try {
+      const results = JSON.parse(jsonText) as ExtractionResult[];
+      return results;
+    } catch {
+      // Fallback: Extract JSON array from response text
+      const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        console.error('[Extract] Claude response:', responseText.substring(0, 500));
+        throw new Error('No JSON array found in Claude response');
+      }
+      const results = JSON.parse(jsonMatch[0]) as ExtractionResult[];
+      return results;
+    }
   } catch (error) {
     console.error('Extraction error:', error);
     throw new Error(`Pain point extraction failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
