@@ -3,6 +3,9 @@ import { searchDevToPosts, type DevToPost } from './devto';
 import { searchIndieHackersPosts, type IndieHackersPost } from './indiehackers';
 import { searchGitHubIssues, type GitHubIssue } from './github';
 import { searchStackOverflow, type SOQuestion } from './stackoverflow';
+import { searchProductHunt, type ProductHuntPost } from './producthunt';
+import { searchYCRFS, type YCRFSPost } from './yc-rfs';
+import { searchFailory, type FailoryPost } from './failory';
 import type { Post } from './types';
 
 /**
@@ -95,7 +98,61 @@ function soToPost(question: SOQuestion): Post {
   };
 }
 
-export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'all';
+/**
+ * Convert Product Hunt post to unified Post format
+ */
+function phToPost(post: ProductHuntPost): Post {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    url: post.url,
+    score: post.score,
+    comments: post.comments,
+    author: post.author,
+    published: post.published,
+    age_hours: post.age_hours,
+    source: 'producthunt',
+  };
+}
+
+/**
+ * Convert YC RFS post to unified Post format
+ */
+function ycrfsToPost(post: YCRFSPost): Post {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    url: post.url,
+    score: post.score,
+    comments: post.comments,
+    author: post.author,
+    published: post.published,
+    age_hours: post.age_hours,
+    source: 'yc-rfs',
+  };
+}
+
+/**
+ * Convert Failory post to unified Post format
+ */
+function failoryToPost(post: FailoryPost): Post {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    url: post.url,
+    score: post.score,
+    comments: post.comments,
+    author: post.author,
+    published: post.published,
+    age_hours: post.age_hours,
+    source: 'failory',
+  };
+}
+
+export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'all';
 
 /**
  * Search across multiple data sources
@@ -106,7 +163,7 @@ export async function searchMultipleSources(
   limit: number = 20
 ): Promise<Post[]> {
   const enabledSources = sources.includes('all')
-    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow']
+    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory']
     : sources;
 
   // Fetch 3x requested limit per source, then filter down for better results
@@ -180,6 +237,48 @@ export async function searchMultipleSources(
         })
         .catch((err) => {
           console.error(`[Sources] Stack Overflow failed:`, err.message);
+          return [];
+        })
+    );
+  }
+
+  if (enabledSources.includes('producthunt')) {
+    promises.push(
+      searchProductHunt(keywords, postsPerSource)
+        .then((posts) => {
+          console.log(`[Sources] Product Hunt: ${posts.length} posts`);
+          return posts.map(phToPost);
+        })
+        .catch((err) => {
+          console.error(`[Sources] Product Hunt failed:`, err.message);
+          return [];
+        })
+    );
+  }
+
+  if (enabledSources.includes('yc-rfs')) {
+    promises.push(
+      searchYCRFS(keywords, postsPerSource)
+        .then((posts) => {
+          console.log(`[Sources] YC RFS: ${posts.length} posts`);
+          return posts.map(ycrfsToPost);
+        })
+        .catch((err) => {
+          console.error(`[Sources] YC RFS failed:`, err.message);
+          return [];
+        })
+    );
+  }
+
+  if (enabledSources.includes('failory')) {
+    promises.push(
+      searchFailory(keywords, postsPerSource)
+        .then((posts) => {
+          console.log(`[Sources] Failory: ${posts.length} posts`);
+          return posts.map(failoryToPost);
+        })
+        .catch((err) => {
+          console.error(`[Sources] Failory failed:`, err.message);
           return [];
         })
     );

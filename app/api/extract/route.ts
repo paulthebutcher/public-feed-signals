@@ -3,6 +3,7 @@ import { searchMultipleSources, type DataSource } from '@/lib/sources';
 import { extractPainPoints } from '@/lib/extract';
 import { scoreRelevance } from '@/lib/relevance';
 import { clusterPainPoints } from '@/lib/cluster';
+import { expandKeywords } from '@/lib/keyword-expansion';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -23,8 +24,29 @@ export async function POST(request: NextRequest) {
       ? sources.filter((s: string) => ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'all'].includes(s))
       : ['all'];
 
-    // Step 1: Fetch posts from multiple sources (fetch 90, will filter to 30)
-    const allPosts = await searchMultipleSources(keywords.trim(), validSources, 30);
+    // Step 1: Always expand keywords to related terms (smart search)
+    console.log(`[API] Expanding keywords for: "${keywords}"`);
+    const searchKeywords = await expandKeywords(keywords.trim());
+    console.log(`[API] Searching with expanded keywords: [${searchKeywords.join(', ')}]`);
+
+    // Search each keyword with FULL limit and combine results
+    // Don't divide limit - we WANT more posts from expansion
+    // OPTIMIZATION: Increase from 30 to 50 posts per keyword for more volume
+    const searchPromises = searchKeywords.map(kw =>
+      searchMultipleSources(kw, validSources, 50)
+    );
+    const postsArrays = await Promise.all(searchPromises);
+    let allPosts = postsArrays.flat();
+
+    // Deduplicate by post ID
+    const seen = new Set<string | number>();
+    allPosts = allPosts.filter(post => {
+      if (seen.has(post.id)) return false;
+      seen.add(post.id);
+      return true;
+    });
+
+    console.log(`[API] Fetched ${allPosts.length} unique posts across ${searchKeywords.length} keywords`);
 
     if (allPosts.length === 0) {
       return NextResponse.json({
@@ -36,10 +58,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 2: Score posts for relevance using Claude (semantic search)
-    // This finds "building a SaaS" when searching "startup"
-    const relevantPosts = await scoreRelevance(allPosts, keywords.trim(), 30);
+    // CRITICAL: Use expanded keywords, not just the original keyword!
+    // This lets Claude know we're looking for posts about "startup OR founder OR SaaS OR indie"
+    const expandedKeywordsString = searchKeywords.join(", ");
+    // OPTIMIZATION: Increase from 100 to 200 to score more posts
+    const scoringLimit = Math.min(allPosts.length, 200);
+    const relevantPosts = await scoreRelevance(allPosts, expandedKeywordsString, scoringLimit);
 
-    console.log(`[API] Fetched ${allPosts.length} posts, ${relevantPosts.length} relevant (score >40)`);
+    console.log(`[API] Scored ${allPosts.length} posts against [${expandedKeywordsString}], kept ${relevantPosts.length} relevant (score >30)`);
 
     // Step 3: Extract pain points using Claude
     const results = await extractPainPoints(relevantPosts);
@@ -77,6 +103,7 @@ export async function POST(request: NextRequest) {
       sources_used: sourcesUsed,
       clusters: clusteredPainPoints.length,
       total_mentions: clusteredPainPoints.reduce((sum, p) => sum + p.mention_count, 0),
+      expanded_keywords: searchKeywords,
     });
   } catch (error) {
     console.error('API Error:', error);

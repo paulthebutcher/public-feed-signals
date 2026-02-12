@@ -91,18 +91,18 @@ Return ONLY a valid JSON array with this exact format (no markdown, no explanati
       return posts.slice(0, topN);
     }
 
-    // Return only posts scoring >40, sorted by relevance (lowered from 60 for better coverage)
+    // Return only posts scoring >30, sorted by relevance (lowered from 40 for better coverage)
     const scoredPosts = posts
       .map((post, i) => ({
         post,
         score: scores.find((s) => s.index === i)?.score || 0
       }))
-      .filter(({ score }) => score > 40)
+      .filter(({ score }) => score > 30)
       .sort((a, b) => b.score - a.score)
       .slice(0, topN)
       .map(({ post }) => post);
 
-    console.log(`[Relevance] Scored ${posts.length} posts, kept ${scoredPosts.length} with score >40 (${scoredPosts.map((p) => scores.find(s => s.index === posts.indexOf(p))?.score).filter(Boolean).join(', ')})`);
+    console.log(`[Relevance] Scored ${posts.length} posts, kept ${scoredPosts.length} with score >30 (${scoredPosts.map((p) => scores.find(s => s.index === posts.indexOf(p))?.score).filter(Boolean).join(', ')})`);
 
     return scoredPosts;
   } catch (error) {

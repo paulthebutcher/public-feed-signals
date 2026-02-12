@@ -550,3 +550,282 @@ Dependencies:
 Success metric:
 - [How do we know it worked?]
 ```
+
+---
+
+## NEW FRICTION: Keyword Expansion Implementation (February 10, Evening)
+
+### ❌ First Implementation Made Results WORSE
+
+**What happened:**
+- Implemented keyword expansion as requested
+- User tested and got only 4 pain points (down from ~50 previously)
+- Terminal logs showed: "Fetched 4 unique posts across 6 keywords"
+
+**What I did wrong:**
+```typescript
+// WRONG: Divided limit across keywords
+const postsPerKeyword = Math.ceil(30 / searchKeywords.length); // 30 ÷ 6 = 5
+```
+
+**Why it broke:**
+- Each source got only 5 posts to fetch per keyword
+- Sources have minimum engagement thresholds
+- With such small limits, most sources returned 0 posts
+- Result: Only Dev.to returned 3-4 posts total
+
+**Time wasted:** 20 minutes to diagnose and fix
+
+**What I should have known:**
+- Keyword expansion should MULTIPLY data, not divide it
+- Each keyword should get the FULL limit (30 posts)
+- 6 keywords × 30 posts = 180 fetches → ~150 unique after dedup
+- That's the VALUE of expansion (more coverage, not less)
+
+---
+
+### ❌ Second Issue: Overly Specific Keywords
+
+**After fixing the math, still getting poor results (4 pain points)**
+
+**What happened:**
+- Keyword expansion was generating multi-word phrases:
+  - "early-stage companies"
+  - "venture capital"
+  - "scaling businesses"
+  - "entrepreneurship"
+- Terminal showed sources returning 0 posts for these searches
+
+**Root cause:**
+- Sources do string matching on these long phrases
+- People don't type "early-stage companies" in search boxes
+- They type simple terms: "startup", "founder", "indie"
+
+**Time wasted:** 15 minutes to diagnose
+
+**What I should have known:**
+- Search keywords should be SHORT (1-2 words max)
+- Prompt engineering matters for keyword expansion
+- Test the generated keywords manually: "Would someone actually search for this?"
+
+**What the prompt should have said from the start:**
+```typescript
+const prompt = `Generate 2-3 SHORT, simple terms (1-2 words each).
+CRITICAL: Use SHORT, common terms that people actually type.
+Examples:
+- "startup" → ["founder", "SaaS", "indie"]
+NOT: ["early-stage companies", "venture capital", "entrepreneurship"]
+`;
+```
+
+---
+
+### ❌ Progress Indicators Were Fake
+
+**What happened:**
+- User saw progress messages but they were fake setTimeout timers
+- User requested: "Show actual steps, complete/in-progress/pending"
+- No explicit labels, just visual states
+
+**What I did wrong:**
+- Used fake timings instead of real progress tracking
+- Didn't think about UX of showing actual pipeline steps
+
+**Time wasted:** 25 minutes to implement proper step UI
+
+**What Monday should have provided:**
+```markdown
+## Progress Indicator Requirements
+
+Show actual pipeline steps with visual states:
+1. ✓ Step name (completed - green checkmark)
+2. 🔄 Step name (in progress - spinner)
+3. ○ Step name (pending - gray circle)
+
+Steps to show:
+1. Expanding keywords (~1s)
+2. Fetching from sources (~5s)
+3. Scoring relevance (~5s)
+4. Extracting pain points (~10s)
+5. Clustering results (~4s)
+
+No explicit status labels - visual states only
+```
+
+---
+
+## PATTERNS FROM KEYWORD EXPANSION
+
+### Category: (c) Better Risk Identification + (d) Unpredictable
+
+**Two cascading issues:**
+1. Math bug (divided instead of multiplied) - PREDICTABLE, should have caught
+2. Keyword quality (too specific) - HARDER to predict without testing
+
+### Time Cost
+- Initial implementation: 2 hours
+- First bug fix (math): 20 minutes
+- Second bug fix (keywords): 15 minutes  
+- Progress UI improvement: 25 minutes
+- **Total: 3 hours for a "2 hour" feature**
+
+### What Could Have Been Caught Monday
+
+**Math bug** - YES, with test cases:
+```markdown
+## Keyword Expansion - Test Cases
+
+BEFORE implementing, verify logic:
+- Input: "startup" → expands to 3 keywords
+- Expected posts: 3 keywords × 30 posts × 5 sources = 450 fetches
+- After dedup: ~200 unique posts
+- NOT: 30 total posts (that's WORSE than no expansion)
+
+Test question: "Does this MULTIPLY coverage or DIVIDE it?"
+```
+
+**Keyword quality** - MAYBE, with examples:
+```markdown
+## Keyword Expansion - Quality Check
+
+Generated keywords should be:
+- SHORT (1-2 words max)
+- Common (what people actually search)
+- Testable (try them in Google/HN search)
+
+Red flags:
+- Multi-word phrases: "early-stage companies"
+- Formal language: "entrepreneurship"
+- Jargon: "venture capital"
+
+These won't match in source searches.
+```
+
+**Progress indicators** - YES, should have been in UX spec:
+```markdown
+## Loading States - Must Show Real Steps
+
+Don't use:
+- Generic spinner + "Loading..."
+- Fake setTimeout messages
+
+Do use:
+- Actual pipeline steps
+- Visual states (checkmark, spinner, grayed)
+- No explicit labels (user can infer from icon)
+```
+
+---
+
+## LEARNINGS: Keyword Expansion
+
+### 1. Always Test The Math
+Before implementing features that multiply API calls:
+- Write expected behavior: "3 keywords → 3× more posts"
+- Verify math: `postsPerKeyword` should be the FULL limit, not divided
+- Ask: "Does this multiply value or divide it?"
+
+### 2. Prompt Engineering For Search Keywords
+When generating search terms via AI:
+- Specify LENGTH constraints ("1-2 words max")
+- Give anti-examples ("NOT: multi-word phrases")
+- Think about user behavior ("what would someone type?")
+- Test generated keywords manually
+
+### 3. Show Real Progress, Not Fake Timers
+Users can tell when progress is fake:
+- Use actual pipeline steps
+- Visual states > text labels
+- Update based on real timing (even if estimated)
+
+### 4. Test Before Saying "Ready"
+Even with TypeScript + ESLint passing:
+- Feature might work but produce poor results
+- Math bugs don't show up in type checks
+- Generated content (keywords) needs quality checks
+
+**New rule:** For features that call external APIs or generate content:
+1. Implement
+2. Test locally with real data
+3. Verify results QUALITY (not just "no errors")
+4. THEN say "ready"
+
+---
+
+## Updated Templates
+
+### Template: AI Content Generation Features
+```markdown
+## Feature: [Name] (uses AI to generate content)
+
+Implementation checklist:
+1. Write prompt with LENGTH constraints
+2. Give anti-examples (what NOT to generate)
+3. Test generated output manually (does it make sense?)
+4. Verify quality, not just format
+
+Quality checks:
+- [ ] Generated content is SHORT and usable
+- [ ] Matches how humans actually behave
+- [ ] Test 3-5 examples manually before shipping
+```
+
+### Template: Features That Multiply API Calls
+```markdown
+## Feature: [Name] (makes multiple API calls)
+
+BEFORE implementing:
+1. Write expected behavior: "X inputs → Y× more data"
+2. Verify math: Does logic multiply or divide?
+3. Calculate cost: X calls × $Y = total cost
+4. Add logging: Show fetch counts in terminal
+
+Test cases:
+- [ ] With 1 input: Should fetch N items
+- [ ] With 3 inputs: Should fetch 3×N items (not N/3!)
+- [ ] Verify deduplication works
+```
+
+---
+
+## ROI: Could This Have Been Prevented?
+
+**Time spent on keyword expansion:**
+- Planned: 2 hours
+- Actual: 3 hours (50% overrun)
+
+**Preventable friction:**
+- Math bug: 20 min (test cases would catch)
+- Keyword quality: 15 min (prompt anti-examples would help)
+- Progress UI: Not friction (user request, legitimate work)
+
+**Could have saved:** 35 minutes with better upfront planning
+
+**Templates needed:**
+1. AI content generation checklist (with quality checks)
+2. Multi-API-call features (with math verification)
+3. Loading state standards (real steps, not fake timers)
+
+---
+
+## Meta: This Session's Friction Pattern
+
+**Primary pattern:** Cascading issues from insufficient testing
+1. Implement feature (passes type checks)
+2. User tests, finds it's WORSE
+3. Fix math bug
+4. User tests, STILL bad  
+5. Fix quality issue
+6. User satisfied
+
+**Cost:** 3 hours instead of 2 hours + better user experience
+
+**Prevention:** Add "manual quality check" step BEFORE saying ready:
+- For search features: Try the searches manually
+- For AI generation: Review generated content samples
+- For UI changes: Screenshot and verify states
+
+**New rule for complex features:**
+"TypeScript + ESLint = syntactically correct
+Manual testing = actually works as intended
+BOTH required before 'ready'"

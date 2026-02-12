@@ -72,14 +72,13 @@ export async function searchGitHubIssues(
 
     const issues = data.items.map((issue: GitHubAPIIssue) => formatIssue(issue));
 
-    // Filter for recent (30 days) and with decent discussion
-    const thirtyDaysAgo = 30 * 24;
+    // Filter for recent issues - GitHub issues remain relevant, use longer window
+    const ninetyDaysAgo = 90 * 24; // 90 days
     const filtered = issues.filter((issue: GitHubIssue) =>
-      issue.age_hours < thirtyDaysAgo &&
-      issue.comments > 0
+      issue.age_hours < ninetyDaysAgo // Removed comment requirement - new issues can have great pain points
     );
 
-    console.log(`[GitHub] Fetched ${issues.length} issues, ${filtered.length} recent with discussion`);
+    console.log(`[GitHub] Fetched ${issues.length} issues, ${filtered.length} recent (within 90 days)`);
 
     return filtered.slice(0, limit);
   } catch (error) {

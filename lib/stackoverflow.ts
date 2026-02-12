@@ -68,14 +68,13 @@ export async function searchStackOverflow(
 
     const questions = data.items.map((q: SOAPIQuestion) => formatQuestion(q));
 
-    // Filter for recent (30 days) and high engagement
-    const thirtyDaysAgo = 30 * 24;
+    // Filter for recent questions - Stack Overflow questions are evergreen, use longer window
+    const oneYearAgo = 365 * 24; // 1 year - SO questions remain relevant longer
     const filtered = questions.filter((q: SOQuestion) =>
-      q.age_hours < thirtyDaysAgo &&
-      q.score > 0
+      q.age_hours < oneYearAgo // Removed vote requirement - low-vote questions can have great pain points
     );
 
-    console.log(`[StackOverflow] Fetched ${questions.length} questions, ${filtered.length} recent with votes`);
+    console.log(`[StackOverflow] Fetched ${questions.length} questions, ${filtered.length} recent (within 1 year)`);
 
     return filtered.slice(0, limit);
   } catch (error) {

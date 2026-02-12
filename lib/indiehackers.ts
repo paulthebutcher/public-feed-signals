@@ -115,7 +115,7 @@ function formatPost(post: RSSPost): IndieHackersPost {
  * Note: Server-side only (uses DOMParser from Node.js)
  */
 export async function fetchRecentIndieHackersPosts(limit: number = 30): Promise<IndieHackersPost[]> {
-  const thirtyDaysAgo = 30 * 24; // hours (evergreen pain points)
+  const ninetyDaysAgo = 90 * 24; // hours - relaxed from 30 to get more posts
 
   const posts = await fetchIndieHackersRSS();
   if (!posts) return [];
@@ -124,11 +124,11 @@ export async function fetchRecentIndieHackersPosts(limit: number = 30): Promise<
   const formattedPosts = posts
     .map(formatPost)
     .filter((post) => {
-      // Must have content (lowered threshold for better coverage)
-      if (!post.content || post.content.length < 50) return false;
+      // Must have SOME content (removed strict 50-char threshold)
+      if (!post.content || post.content.trim().length === 0) return false;
 
-      // Must be recent (last 30 days)
-      if (post.age_hours > thirtyDaysAgo) return false;
+      // Must be recent (last 90 days)
+      if (post.age_hours > ninetyDaysAgo) return false;
 
       return true;
     });
@@ -143,11 +143,21 @@ export async function searchIndieHackersPosts(
   keywords: string,
   limit: number = 30
 ): Promise<IndieHackersPost[]> {
-  const posts = await fetchRecentIndieHackersPosts(limit * 2);
+  const posts = await fetchRecentIndieHackersPosts(limit * 3); // Fetch 3x to have enough after filtering
 
-  console.log(`[IH] Fetched ${posts.length} recent posts - returning all for semantic scoring`);
+  // CRITICAL: Actually filter by keywords so different keywords return different posts!
+  // Use loose matching: keyword appears in title or content
+  const keywordLower = keywords.toLowerCase();
+  const matchedPosts = posts.filter(post => {
+    const titleMatch = post.title.toLowerCase().includes(keywordLower);
+    const contentMatch = post.content.toLowerCase().includes(keywordLower);
 
-  // NO keyword filtering - let semantic scoring handle relevance
-  // This allows "startup" to match "indie maker", "building in public", etc.
-  return posts.slice(0, limit);
+    return titleMatch || contentMatch;
+  });
+
+  console.log(`[IH] Fetched ${posts.length} recent posts, ${matchedPosts.length} match "${keywords}"`);
+
+  // Return ONLY matched posts, no fallback
+  // If 0 matches, return empty array to avoid polluting results with duplicates
+  return matchedPosts.slice(0, limit);
 }

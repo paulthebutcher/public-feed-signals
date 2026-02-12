@@ -51,6 +51,12 @@ export function PainPointCard({ painPoint, rank }: PainPointCardProps) {
         return { label: 'GitHub', color: 'bg-slate-900/50 text-slate-300 border-slate-700' };
       case 'stackoverflow':
         return { label: 'Stack Overflow', color: 'bg-amber-900/30 text-amber-400 border-amber-800' };
+      case 'producthunt':
+        return { label: 'Product Hunt', color: 'bg-orange-900/40 text-orange-300 border-orange-700' };
+      case 'yc-rfs':
+        return { label: 'YC RFS', color: 'bg-amber-900/50 text-amber-200 border-amber-600' };
+      case 'failory':
+        return { label: 'Failory', color: 'bg-red-900/40 text-red-300 border-red-700' };
       default:
         return { label: source, color: 'bg-secondary text-tertiary border-default' };
     }

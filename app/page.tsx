@@ -30,14 +30,23 @@ type ExtractionResult = {
   sources_used: string[];
   clusters?: number;
   total_mentions?: number;
+  expanded_keywords?: string[];
 };
 
 export default function Home() {
   const [keywords, setKeywords] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingStep, setLoadingStep] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
   const [results, setResults] = useState<ExtractionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const steps = [
+    'Expanding keywords',
+    'Fetching from 5 sources',
+    'Scoring relevance with AI',
+    'Extracting pain points',
+    'Clustering similar problems'
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,21 +59,24 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     setResults(null);
+    setCurrentStep(0);
 
     try {
-      // Simulate progress steps
-      setLoadingStep('Fetching posts from 5 sources...');
-
-      setTimeout(() => setLoadingStep('Scoring relevance with AI...'), 3000);
-      setTimeout(() => setLoadingStep('Extracting pain points...'), 8000);
-      setTimeout(() => setLoadingStep('Clustering similar problems...'), 20000);
+      // Progress through steps based on realistic timing
+      setTimeout(() => setCurrentStep(1), 500);   // Expanding
+      setTimeout(() => setCurrentStep(2), 3000);  // Fetching
+      setTimeout(() => setCurrentStep(3), 8000);  // Scoring
+      setTimeout(() => setCurrentStep(4), 18000); // Extracting
 
       const response = await fetch('/api/extract', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ keywords: keywords.trim(), sources: ['all'] }),
+        body: JSON.stringify({
+          keywords: keywords.trim(),
+          sources: ['all']
+        }),
       });
 
       if (!response.ok) {
@@ -78,7 +90,7 @@ export default function Home() {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
-      setLoadingStep('');
+      setCurrentStep(0);
     }
   };
 
@@ -116,7 +128,7 @@ export default function Home() {
             </button>
           </div>
           <p className="mt-2 text-xs text-tertiary">
-            Searches 5 sources for problems related to your keywords
+            🔍 Smart search automatically expands your keywords to find related discussions
           </p>
         </form>
 
@@ -128,18 +140,70 @@ export default function Home() {
           </div>
         )}
 
-        {/* Loading State with Progress */}
+        {/* Loading State with Progress Steps */}
         {isLoading && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-subtle border-t-copper-400"></div>
-            <p className="mt-4 text-primary font-semibold">{loadingStep || 'Starting...'}</p>
-            <p className="mt-2 text-sm text-tertiary">This usually takes ~30 seconds</p>
+          <div className="py-12">
+            <div className="max-w-md mx-auto space-y-3">
+              {steps.map((step, index) => {
+                const isComplete = index < currentStep;
+                const isCurrent = index === currentStep;
+                const isPending = index > currentStep;
+
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center gap-3 transition-all duration-300 ${
+                      isPending ? 'opacity-40' : 'opacity-100'
+                    }`}
+                  >
+                    {isComplete && (
+                      <div className="w-6 h-6 rounded-full bg-copper-600 flex items-center justify-center shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                    {isCurrent && (
+                      <div className="w-6 h-6 rounded-full border-2 border-copper-400 border-t-copper-600 animate-spin shrink-0"></div>
+                    )}
+                    {isPending && (
+                      <div className="w-6 h-6 rounded-full border-2 border-subtle shrink-0"></div>
+                    )}
+                    <span className={`text-sm ${isCurrent ? 'text-primary font-semibold' : 'text-secondary'}`}>
+                      {step}
+                    </span>
+                  </div>
+                );
+              })}
+              <p className="mt-6 text-center text-xs text-tertiary">Usually takes ~25 seconds</p>
+            </div>
           </div>
         )}
 
         {/* Results */}
         {results && !isLoading && (
           <div className="space-y-6">
+            {/* Expanded Keywords Display */}
+            {results.expanded_keywords && results.expanded_keywords.length > 1 && (
+              <div className="p-4 bg-elevated border border-default rounded-lg">
+                <p className="text-xs text-secondary mb-2">Searched keywords:</p>
+                <div className="flex gap-2 flex-wrap">
+                  {results.expanded_keywords.map((kw, i) => (
+                    <span
+                      key={i}
+                      className={`px-3 py-1 text-sm rounded-md border ${
+                        i === 0
+                          ? 'bg-copper-900/30 text-copper-300 border-copper-700 font-semibold'
+                          : 'bg-elevated border-default text-secondary'
+                      }`}
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Stats */}
             <div className="grid grid-cols-4 gap-4 p-6 bg-elevated border border-default rounded-lg shadow-xs">
               <div>

@@ -80,16 +80,22 @@ function formatPost(article: DevToArticle): DevToPost {
  * Fetch recent Dev.to articles (last 30 days with content)
  */
 export async function fetchRecentDevToPosts(limit: number = 30): Promise<DevToPost[]> {
-  const thirtyDaysAgo = 30 * 24; // hours (evergreen pain points)
+  // NO TIME FILTER - pain points are evergreen
+  // Let semantic scoring and engagement metrics determine relevance
 
-  // Fetch articles from multiple relevant tags
-  const tags = ['startup', 'entrepreneur', 'business', 'showdev', 'discuss', 'help'];
+  // Fetch articles from multiple relevant tags - expanded to 20 tags for more volume
+  const tags = [
+    'startup', 'entrepreneur', 'business', 'showdev', 'discuss', 'help',
+    'productivity', 'career', 'webdev', 'javascript', 'python', 'devops',
+    'cloud', 'ai', 'opensource', 'saas', 'indie', 'founder', 'coding', 'tech'
+  ];
 
   const allArticles: DevToArticle[] = [];
 
-  // Fetch from each tag (parallel)
+  // Fetch from each tag (parallel) - fetch MORE posts per tag
+  const postsPerTag = Math.max(100, Math.ceil(limit / tags.length)); // Increased from 50 to 100
   const tagPromises = tags.map((tag) =>
-    fetchDevToArticles({ tag, per_page: Math.ceil(limit / tags.length) })
+    fetchDevToArticles({ tag, per_page: postsPerTag })
   );
 
   const results = await Promise.all(tagPromises);
@@ -99,12 +105,10 @@ export async function fetchRecentDevToPosts(limit: number = 30): Promise<DevToPo
   const posts = allArticles
     .map(formatPost)
     .filter((post) => {
-      // Must have content (lowered threshold for better coverage)
-      if (!post.content || post.content.length < 50) return false;
+      // Must have SOME content
+      if (!post.content || post.content.trim().length === 0) return false;
 
-      // Must be recent (last 30 days)
-      if (post.age_hours > thirtyDaysAgo) return false;
-
+      // NO TIME FILTER - removed to maximize volume
       return true;
     })
     // Remove duplicates by ID
@@ -119,11 +123,22 @@ export async function fetchRecentDevToPosts(limit: number = 30): Promise<DevToPo
  * Search Dev.to articles by keywords
  */
 export async function searchDevToPosts(keywords: string, limit: number = 30): Promise<DevToPost[]> {
-  const posts = await fetchRecentDevToPosts(limit * 2); // Fetch more to filter
+  const posts = await fetchRecentDevToPosts(limit * 5); // Fetch 5x to have enough after filtering (increased from 3x)
 
-  console.log(`[Dev.to] Fetched ${posts.length} recent posts - returning all for semantic scoring`);
+  // CRITICAL: Actually filter by keywords so different keywords return different posts!
+  // Use loose matching: keyword appears in title, content, or tags
+  const keywordLower = keywords.toLowerCase();
+  const matchedPosts = posts.filter(post => {
+    const titleMatch = post.title.toLowerCase().includes(keywordLower);
+    const contentMatch = post.content.toLowerCase().includes(keywordLower);
+    const tagMatch = post.tags.some(tag => tag.toLowerCase().includes(keywordLower));
 
-  // NO keyword filtering - let semantic scoring handle relevance
-  // This allows "startup" to match "indie maker", "building a product", etc.
-  return posts.slice(0, limit);
+    return titleMatch || contentMatch || tagMatch;
+  });
+
+  console.log(`[Dev.to] Fetched ${posts.length} recent posts, ${matchedPosts.length} match "${keywords}"`);
+
+  // Return ONLY matched posts, no fallback
+  // If 0 matches, return empty array to avoid polluting results with duplicates
+  return matchedPosts.slice(0, limit);
 }

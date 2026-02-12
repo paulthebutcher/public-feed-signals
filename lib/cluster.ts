@@ -23,7 +23,9 @@ export async function clusterPainPoints(
   painPoints: ExtractionResult[]
 ): Promise<ClusteredPainPoint[]> {
   // If too few pain points, no clustering needed
-  if (painPoints.length < 3) {
+  // Increased threshold to 10 to avoid slow clustering for small result sets
+  if (painPoints.length < 10) {
+    console.log(`[Cluster] Skipping clustering for ${painPoints.length} pain points (threshold: 10)`);
     return painPoints.map((pp, i) => ({
       ...pp,
       cluster_id: `cluster_${i}`,
@@ -76,7 +78,7 @@ Return ONLY valid JSON (no markdown, no explanation):
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: 'claude-haiku-4-5-20251001', // Use Haiku for speed (10x faster, 10x cheaper)
       max_tokens: 2000,
       temperature: 0.3,
       messages: [{ role: 'user', content: prompt }]

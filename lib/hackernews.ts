@@ -74,16 +74,17 @@ function formatPost(story: HNStory): HNPost {
 }
 
 /**
- * Fetch recent Ask HN posts (last 7 days with content)
+ * Fetch Ask HN posts (NO time filter - pain points are evergreen)
  */
 export async function fetchRecentAskHNPosts(limit: number = 30): Promise<HNPost[]> {
-  const sevenDaysAgo = 7 * 24; // hours
+  // NO TIME FILTER - removed to maximize volume
 
-  // Get story IDs
-  const storyIds = await getAskHNStoryIds(limit * 2); // Fetch more to account for filtering
+  // Get story IDs - fetch 15x limit to have enough after filtering (increased from 10x)
+  const storyIds = await getAskHNStoryIds(Math.max(300, limit * 15));
 
-  // Fetch full story details in parallel
-  const storyPromises = storyIds.slice(0, limit).map((id) => getHNStory(id));
+  // Fetch full story details in parallel - fetch MORE stories (increased from 3x to 5x)
+  const fetchLimit = Math.min(storyIds.length, limit * 5);
+  const storyPromises = storyIds.slice(0, fetchLimit).map((id) => getHNStory(id));
   const stories = await Promise.all(storyPromises);
 
   // Filter and format
@@ -91,12 +92,10 @@ export async function fetchRecentAskHNPosts(limit: number = 30): Promise<HNPost[
     .filter((story): story is HNStory => story !== null && story.type === 'story')
     .map(formatPost)
     .filter((post) => {
-      // Must have content (not just a link)
-      if (!post.content || post.content.length < 50) return false;
+      // Must have SOME content
+      if (!post.content || post.content.trim().length === 0) return false;
 
-      // Must be recent (last 7 days)
-      if (post.age_hours > sevenDaysAgo) return false;
-
+      // NO TIME FILTER - removed to maximize volume
       return true;
     });
 
@@ -107,7 +106,8 @@ export async function fetchRecentAskHNPosts(limit: number = 30): Promise<HNPost[
  * Search Ask HN posts by keywords
  */
 export async function searchAskHNPosts(keywords: string, limit: number = 30): Promise<HNPost[]> {
-  const posts = await fetchRecentAskHNPosts(limit);
+  // Fetch 5x limit to have enough posts after keyword filtering (increased from 3x)
+  const posts = await fetchRecentAskHNPosts(limit * 5);
 
   // Simple keyword matching (case-insensitive)
   const keywordLower = keywords.toLowerCase();
@@ -115,7 +115,7 @@ export async function searchAskHNPosts(keywords: string, limit: number = 30): Pr
 
   if (keywordParts.length === 0) {
     // No valid keywords, return all recent posts
-    return posts.slice(0, 20);
+    return posts.slice(0, limit);
   }
 
   // Score posts by keyword relevance
@@ -130,9 +130,15 @@ export async function searchAskHNPosts(keywords: string, limit: number = 30): Pr
   });
 
   // Filter posts with at least one keyword match and sort by relevance
-  return scoredPosts
+  const matchedPosts = scoredPosts
     .filter((sp) => sp.relevance > 0)
     .sort((a, b) => b.relevance - a.relevance)
     .map((sp) => sp.post)
-    .slice(0, 20);
+    .slice(0, limit);
+
+  console.log(`[HN] Fetched ${posts.length} posts, ${matchedPosts.length} match "${keywords}"`);
+
+  // Return ONLY matched posts, no fallback
+  // If 0 matches, return empty array to avoid polluting results with duplicates
+  return matchedPosts;
 }
