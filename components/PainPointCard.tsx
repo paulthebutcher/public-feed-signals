@@ -57,6 +57,10 @@ export function PainPointCard({ painPoint, rank }: PainPointCardProps) {
         return { label: 'YC RFS', color: 'bg-amber-900/50 text-amber-200 border-amber-600' };
       case 'failory':
         return { label: 'Failory', color: 'bg-red-900/40 text-red-300 border-red-700' };
+      case 'quora':
+        return { label: 'Quora', color: 'bg-red-800/40 text-red-200 border-red-600' };
+      case 'medium':
+        return { label: 'Medium', color: 'bg-green-900/40 text-green-200 border-green-700' };
       default:
         return { label: source, color: 'bg-secondary text-tertiary border-default' };
     }

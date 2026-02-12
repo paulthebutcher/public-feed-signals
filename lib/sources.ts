@@ -6,6 +6,8 @@ import { searchStackOverflow, type SOQuestion } from './stackoverflow';
 import { searchProductHunt, type ProductHuntPost } from './producthunt';
 import { searchYCRFS, type YCRFSPost } from './yc-rfs';
 import { searchFailory, type FailoryPost } from './failory';
+import { searchQuora, type QuoraPost } from './quora';
+import { searchMedium, type MediumPost } from './medium';
 import type { Post } from './types';
 
 /**
@@ -152,7 +154,43 @@ function failoryToPost(post: FailoryPost): Post {
   };
 }
 
-export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'all';
+/**
+ * Convert Quora post to unified Post format
+ */
+function quoraToPost(post: QuoraPost): Post {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    url: post.url,
+    score: post.score,
+    comments: post.comments,
+    author: post.author,
+    published: post.published,
+    age_hours: post.age_hours,
+    source: 'quora',
+  };
+}
+
+/**
+ * Convert Medium post to unified Post format
+ */
+function mediumToPost(post: MediumPost): Post {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    url: post.url,
+    score: post.score,
+    comments: post.comments,
+    author: post.author,
+    published: post.published,
+    age_hours: post.age_hours,
+    source: 'medium',
+  };
+}
+
+export type DataSource = 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'quora' | 'medium' | 'all';
 
 /**
  * Search across multiple data sources
@@ -163,7 +201,7 @@ export async function searchMultipleSources(
   limit: number = 20
 ): Promise<Post[]> {
   const enabledSources = sources.includes('all')
-    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory']
+    ? ['hackernews', 'devto', 'indiehackers', 'github', 'stackoverflow', 'producthunt', 'yc-rfs', 'failory', 'quora', 'medium']
     : sources;
 
   // Fetch 3x requested limit per source, then filter down for better results
@@ -279,6 +317,34 @@ export async function searchMultipleSources(
         })
         .catch((err) => {
           console.error(`[Sources] Failory failed:`, err.message);
+          return [];
+        })
+    );
+  }
+
+  if (enabledSources.includes('quora')) {
+    promises.push(
+      searchQuora(keywords, postsPerSource)
+        .then((posts) => {
+          console.log(`[Sources] Quora: ${posts.length} questions`);
+          return posts.map(quoraToPost);
+        })
+        .catch((err) => {
+          console.error(`[Sources] Quora failed:`, err.message);
+          return [];
+        })
+    );
+  }
+
+  if (enabledSources.includes('medium')) {
+    promises.push(
+      searchMedium(keywords, postsPerSource)
+        .then((posts) => {
+          console.log(`[Sources] Medium: ${posts.length} articles`);
+          return posts.map(mediumToPost);
+        })
+        .catch((err) => {
+          console.error(`[Sources] Medium failed:`, err.message);
           return [];
         })
     );

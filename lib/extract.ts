@@ -1,10 +1,14 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Post, ExtractionResult } from './types';
 
-const EXTRACTION_PROMPT = `You are analyzing HackerNews Ask HN posts to extract actionable pain points that indie hackers could build products around.
+const EXTRACTION_PROMPT = `You are analyzing posts to extract actionable pain points that indie hackers could build products around.
+
+CRITICAL: Use BOTH direct and reverse strategies:
+1. **Direct**: Look for explicit complaints and problems
+2. **Reverse**: If post describes a SOLUTION/PRODUCT/TOOL, extract the PROBLEM it solves
 
 For each post below, identify:
-1. Is there a genuine pain point or problem being expressed?
+1. Is there a genuine pain point or problem being expressed (directly OR solved by mentioned solution)?
 2. If yes, extract the specific pain point
 3. Score on three dimensions (0-100):
    - **Intensity**: How frustrated/desperate?
@@ -45,7 +49,7 @@ For each post below, identify:
 
 ### Few-Shot Examples:
 
-**Example 1: YES - Pain Point**
+**Example 1: YES - Direct Pain Point**
 Post: "Codex keeps introducing linter errors. I've taught it my style guide but it forgets. Wastes so many tokens."
 Analysis:
 - Has pain point: YES
@@ -55,7 +59,17 @@ Analysis:
 - Frequency: 90 (repeated: "keeps", "forgets")
 - Composite: 85.0
 
-**Example 2: NO - Survey**
+**Example 2: YES - Reverse Strategy (Solution → Problem)**
+Post: "Built a tool that automatically syncs Notion with Google Calendar. Was tired of manually copying events between them every week."
+Analysis:
+- Has pain point: YES (mentioned solution reveals problem)
+- Pain point: "Manual effort syncing calendar events between Notion and Google Calendar weekly"
+- Intensity: 60 (tired of manual work)
+- Specificity: 95 (very concrete: specific apps, weekly frequency)
+- Frequency: 90 (weekly recurring task)
+- Composite: 81.7
+
+**Example 3: NO - Survey**
 Post: "What are you working on? Any new ideas?"
 Analysis:
 - Has pain point: NO

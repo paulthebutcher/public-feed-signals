@@ -11,7 +11,7 @@ export type Post = {
   author: string;
   published: string;
   age_hours: number;
-  source: 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory';
+  source: 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'quora' | 'medium';
 };
 
 /**
@@ -27,7 +27,7 @@ export type ExtractionResult = {
   composite_score?: number;
   supporting_quote?: string;
   reason?: string;
-  source?: 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory';
+  source?: 'hackernews' | 'devto' | 'indiehackers' | 'github' | 'stackoverflow' | 'producthunt' | 'yc-rfs' | 'failory' | 'quora' | 'medium';
 };
 
 /**
