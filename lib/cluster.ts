@@ -92,8 +92,12 @@ Return ONLY valid JSON (no markdown, no explanation):
 
     // Strip markdown code blocks if Claude wraps the JSON
     let jsonText = textContent.text.trim();
+    // Handle all variations: ```json\n, ```\n, ``` with spaces, etc.
     if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+      jsonText = jsonText
+        .replace(/^```[a-z]*\s*\n?/, '') // Remove opening: ```json or ``` with optional newline
+        .replace(/\n?\s*```\s*$/, '')    // Remove closing: ``` with optional newlines/spaces
+        .trim();
     }
 
     // Try to parse directly first
